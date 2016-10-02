@@ -1,0 +1,10 @@
+SET PROJECT_NAME=Octaria
+
+SET PROJECT_LOCATION=%~dp0/../../%PROJECT_NAME%/
+
+SET SHSDK_INCLUDE_PATHES=%~dp0/../../ShineEngine/Shine/
+ 
+mkdir win32_2015
+cd win32_2015
+	cmake -G "Visual Studio 14 2015" -DSHSDK_INCLUDE_PATHES=%SHSDK_INCLUDE_PATHES% %PROJECT_LOCATION%
+cd ..

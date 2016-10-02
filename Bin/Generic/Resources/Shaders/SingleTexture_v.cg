@@ -1,0 +1,17 @@
+﻿/* SCE CONFIDENTIAL
+PlayStation(R)Vita Programmer Tool Runtime Library Release 03.300.031
+* Copyright (C) 2010 Sony Computer Entertainment Inc.
+* All Rights Reserved.
+*/
+
+void main(
+	float2 aPosition,
+    float2 aUV,
+	uniform float4x4 WorldViewProjection,
+	uniform float2 uvScale,
+	out float4 vPosition : POSITION,
+	out float2 vTexCoord : TEXCOORD0)
+{
+	vPosition = mul(float4(aPosition, 0.0f, 1.0f), WorldViewProjection);
+	vTexCoord = aUV.xy * uvScale;
+}

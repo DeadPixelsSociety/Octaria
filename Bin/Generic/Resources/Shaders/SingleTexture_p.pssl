@@ -1,0 +1,67 @@
+//--------------------------------------------------------------------------------------------------
+// Standard material
+//--------------------------------------------------------------------------------------------------
+
+#pragma pack_matrix (row_major)     // sets default order to row major
+
+//
+// Includes
+//
+//#include "lib/platform.fxh"
+
+//
+// Transformations parameters
+//
+ConstantBuffer c1
+{
+	float4x4 WorldViewProjection;
+};
+
+//
+// DiffuseColor Color
+//
+ConstantBuffer c2
+{
+	float4 DiffuseColor;
+};
+
+//
+// Textures
+//
+Texture2D TextureMap : register(t0);
+Texture2D TileSet : register(t1);
+
+//
+// Samplers
+//
+SamplerState TextureMapSampler : register(s0);
+SamplerState TileSetSampler : register(s1);
+
+
+//--------------------------------------------------------------------------------------------------
+// Vertex shader input structure
+//--------------------------------------------------------------------------------------------------
+struct VS_INPUT
+{
+	float2	position	: POSITION;			// Vertex position
+	float2  texcoord	: TEXCOORD0;		// Vertex Color
+};
+
+//--------------------------------------------------------------------------------------------------
+// Vertex shader output structure
+//--------------------------------------------------------------------------------------------------
+struct VS_OUTPUT
+{
+	float4  position	: S_POSITION;		// Vertex position
+	float2  texcoord	: TEXCOORD0;		// Vertex Color
+};
+
+//--------------------------------------------------------------------------------------------------
+// Pixel shader code
+//--------------------------------------------------------------------------------------------------
+float4 main(VS_OUTPUT vIn) : S_TARGET_OUTPUT
+{
+	float4 textureColor = TextureMap.Sample(TextureMapSampler, vIn.texcoord);
+	return textureColor * DiffuseColor;
+}
+

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<string_table name="italian">
+	<entry name="default_editor_text" value="TEXT"/>
+	<entry name="sample_sound_instructions" value="Press Up to play 'gun_pistol_one_shot'§Press Down to play 'alienbomb_explosion_1'"/>
+	<entry name="instructions" value="Choose one of the seven different tables. Change your selection by pressing the Up and Down arrow keys"/>
+</string_table>

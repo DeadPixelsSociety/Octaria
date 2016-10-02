@@ -1,0 +1,15 @@
+﻿/* SCE CONFIDENTIAL
+PlayStation(R)Vita Programmer Tool Runtime Library Release 03.300.031
+* Copyright (C) 2010 Sony Computer Entertainment Inc.
+* All Rights Reserved.
+*/
+
+float4 main(
+	float2 vTexCoord : TEXCOORD0,
+	uniform sampler2D TextureMap : TEXUNIT0,
+	uniform half4 DiffuseColor)
+{
+    float4 textureColor = tex2D(TextureMap, vTexCoord);
+	return(textureColor * DiffuseColor);
+}
+

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<string_table name="french">
+	<entry name="default_editor_text" value="VBNTPDMLRDGSAPDP"/>
+	<entry name="dps_hud_mun_1" value="|INT| / "/>
+	<entry name="dps_hud_mun_2" value="|INT|"/>
+</string_table>
