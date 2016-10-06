@@ -46,10 +46,6 @@ void ShEntryPoint::OnPreInitialize(void)
 
 	//---------------------------------------------------------------------------
 
-#if SH_MASTER && SH_PC && 0
-	ShDisplay::SetFullScreen();
-#endif // SH_MASTER
-
 	g_multiResolutionApplication.OnPreInitialize();
 }
 
