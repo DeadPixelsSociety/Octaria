@@ -18,7 +18,7 @@
 
 //
 // Shine SDK includes
-#include "ShSdk/ShSdk.h"
+#include "ShSDK/ShSDK.h"
 
 #include "CMultiResolutionApplication.h"
 
