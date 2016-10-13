@@ -1,0 +1,3 @@
+<data_set>
+  <data name="ressource"   type="string"    editable="true" default_value="pierre"/>
+</data_set>
