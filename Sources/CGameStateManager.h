@@ -20,6 +20,7 @@ public:
 	enum EGameState
 	{
 		e_game_state_main_menu,
+		e_game_state_game,
 		e_game_state_max,
 	};
 

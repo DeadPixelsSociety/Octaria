@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 // Package     : Octaria
-// File        : CGameStateGameMainMenu.cpp
+// File        : CGameStateMainMenu.cpp
 // Author      : PRADAL & co
 // Description : -
 // PlatForm    : All
@@ -11,7 +11,7 @@
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-/*explicit*/ CGameStateGameMainMenu::CGameStateGameMainMenu(void)
+/*explicit*/ CGameStateMainMenu::CGameStateMainMenu(void)
 : CGameState()
 , m_eState(e_state_enter)
 , m_pCreatedPoulpe(shNULL)
@@ -22,7 +22,7 @@
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-/*virtual*/ CGameStateGameMainMenu::~CGameStateGameMainMenu(void)
+/*virtual*/ CGameStateMainMenu::~CGameStateMainMenu(void)
 {
 
 }
@@ -30,7 +30,7 @@
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-/*virtual*/ void CGameStateGameMainMenu::Initialize(void)
+/*virtual*/ void CGameStateMainMenu::Initialize(void)
 {
 
 }
@@ -38,7 +38,7 @@
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-/*virtual*/ void CGameStateGameMainMenu::Release(void)
+/*virtual*/ void CGameStateMainMenu::Release(void)
 {
 	m_pCreatedPoulpe = shNULL;
 }
@@ -46,7 +46,7 @@
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-/*virtual*/ void CGameStateGameMainMenu::Activate(void)
+/*virtual*/ void CGameStateMainMenu::Activate(void)
 {
 	//
 	// Load level
@@ -63,7 +63,7 @@
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-/*virtual*/ void CGameStateGameMainMenu::DeActivate(void)
+/*virtual*/ void CGameStateMainMenu::DeActivate(void)
 {
 	
 }
@@ -71,7 +71,7 @@
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-/*virtual*/ void CGameStateGameMainMenu::Update(float deltaTimeInMs)
+/*virtual*/ void CGameStateMainMenu::Update(float deltaTimeInMs)
 {
 	switch(m_eState)
 	{
@@ -84,41 +84,13 @@
 
 		case e_state_playing:
 		{
-			g_pInputPlayer->Update();
-
-			bool isLeft		= g_pInputPlayer->IsLeftPressed();
-			bool isRight	= g_pInputPlayer->IsRightPressed();
-			bool isUp		= g_pInputPlayer->IsUpPressed();
-			bool isDown		= g_pInputPlayer->IsDownPressed();
-
-			CShVector2 currentPos = ShEntity2::GetWorldPosition2(m_pCreatedPoulpe);
-
-			if (isLeft)
-			{
-				currentPos.m_x -= 5.0f;
-			}
-			else if (isRight)
-			{
-				currentPos.m_x += 5.0f;
-			}
-
-			if (isUp)
-			{
-				currentPos.m_y += 5.0f;
-			}
-			else if (isDown)
-			{
-				currentPos.m_y -= 5.0f;
-			}
-
-			ShEntity2::SetWorldPosition2(m_pCreatedPoulpe, currentPos.m_x, currentPos.m_y);
 
 		}break;
 		
 		case e_state_end:
 		{
 			g_gameStateManager.Pop();
-			g_gameStateManager.Push(CGameStateManager::e_game_state_main_menu);
+			g_gameStateManager.Push(CGameStateManager::e_game_state_game);
 		}
 		break;
 	}
@@ -127,7 +99,7 @@
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-/*virtual*/ void CGameStateGameMainMenu::OnTouchDown(int iTouch, float positionX, float positionY)
+/*virtual*/ void CGameStateMainMenu::OnTouchDown(int iTouch, float positionX, float positionY)
 {
 
 }
@@ -135,7 +107,7 @@
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-/*virtual*/ void CGameStateGameMainMenu::OnTouchUp(int iTouch, float positionX, float positionY)
+/*virtual*/ void CGameStateMainMenu::OnTouchUp(int iTouch, float positionX, float positionY)
 {
 
 }
@@ -143,7 +115,7 @@
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-/*virtual*/ void CGameStateGameMainMenu::OnTouchMove(int iTouch, float positionX, float positionY)
+/*virtual*/ void CGameStateMainMenu::OnTouchMove(int iTouch, float positionX, float positionY)
 {
 
 }

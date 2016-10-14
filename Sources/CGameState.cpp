@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 // Package     : Octaria
-// File        : CGameState.h
+// File        : CGameState.cpp
 // Author      : PRADAL & co
 // Description : -
 // PlatForm    : All

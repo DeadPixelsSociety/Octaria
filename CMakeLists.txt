@@ -10,8 +10,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "C:/ShineResearch/ShineEngine/Shine/c
 
 include_directories("${SH_ROOT_DIR}/include")
 
-find_library(SH_SDK_LIB			"ShSDK"			PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
-find_library(SH_ENTRYPOINT_LIB	"ShEntryPoint"	PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
+find_library(SH_SDK_LIB			"ShSDK"				PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
+find_library(SH_ENTRYPOINT_LIB	"ShEntryPoint"		PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
 find_library(SH_STUB_LIB		"StubUserSystem"	PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
 
 if (WIN32)
@@ -57,11 +57,19 @@ source_group("GameState" FILES ${SOURCES_stateManager})
 set(SOURCES_multiResolutionApplication Sources/CMultiResolutionApplication.cpp Sources/CMultiResolutionApplication.h)
 source_group("MultiResolutionApplication" FILES ${SOURCES_multiResolutionApplication})
 
-# Level files
-set(SOURCES_mainMenu Sources/CGameStateGameMainMenu.cpp Sources/CGameStateGameMainMenu.h)
+# Game level files
+set(SOURCES_game Sources/CGameStateGame.cpp Sources/CGameStateGame.h)
+source_group("Game\\" FILES ${SOURCES_game})
+
+# Main Menu files
+set(SOURCES_mainMenu Sources/CGameStateMainMenu.cpp Sources/CGameStateMainMenu.h)
 source_group("Game\\Menu" FILES ${SOURCES_mainMenu})
 
-set(SOURCES ${SOURCES_StdAfx} ${SOURCES_main} ${SOURCES_resource} ${SOURCES_gameState} ${SOURCES_stateManager} ${SOURCES_multiResolutionApplication} ${SOURCES_mainMenu} ${SOURCES_input})
+# Poulpe caracter files
+set(SOURCES_poulpe Sources/CGamePoulpe.cpp Sources/CGamePoulpe.h)
+source_group("Game\\Caracter" FILES ${SOURCES_poulpe})
+
+set(SOURCES ${SOURCES_StdAfx} ${SOURCES_main} ${SOURCES_resource} ${SOURCES_gameState} ${SOURCES_stateManager} ${SOURCES_multiResolutionApplication} ${SOURCES_mainMenu} ${SOURCES_input} ${SOURCES_game} ${SOURCES_poulpe})
 
 #link_directories("../ShineEngine/Shine/Lib")
 

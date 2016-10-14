@@ -27,7 +27,10 @@
 #include "CGameState.h"
 #include "CGameStateManager.h"
 
-#include "CGameStateGameMainMenu.h"
+#include "CGameStateGame.h"
+#include "CGameStateMainMenu.h"
+
+#include "CGamePoulpe.h"
 
 //
 // Project callbacks

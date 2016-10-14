@@ -1,18 +1,19 @@
 //--------------------------------------------------------------------------------------------------
 // Package     : Octaria
-// File        : CGameStateGameMainMenu.h
+// File        : CGameStateGame.h
 // Author      : PRADAL & co
 // Description : -
 // PlatForm    : All
 //--------------------------------------------------------------------------------------------------
 
-#ifndef __CGameStateGameMainMenu_H
-#define __CGameStateGameMainMenu_H
+#ifndef __CGAMESTATEGAME_H
+#define __CGAMESTATEGAME_H
 
+class CGamePoulpe;
 
 //
 /// Level game state
-class CGameStateGameMainMenu : public CGameState
+class CGameStateGame : public CGameState
 {
 public:
 
@@ -25,8 +26,8 @@ public:
 
 	//
 	// Construction / Destruction
-	explicit			CGameStateGameMainMenu	(void);
-	virtual				~CGameStateGameMainMenu	(void);
+	explicit			CGameStateGame	(void);
+	virtual				~CGameStateGame	(void);
 
 		//
 	// Initialization / Release / Activation / Deactivation
@@ -34,6 +35,7 @@ public:
 	virtual void			Release				(void) SH_ATTRIBUTE_OVERRIDE;
 	virtual void			Activate			(void) SH_ATTRIBUTE_OVERRIDE;
 	virtual void			DeActivate			(void) SH_ATTRIBUTE_OVERRIDE;
+
 	//
 	// Update
 	virtual void			Update				(float deltaTimeInMs) SH_ATTRIBUTE_OVERRIDE;
@@ -52,9 +54,10 @@ public:
 protected:
 
 private:
-	EState				m_eState;
+	EState						m_eState; // Game state
 
-	ShEntity2 *			m_pCreatedPoulpe;
+	CShArray<CGamePoulpe *>		m_aPoulpeList;
+
 };
 
-#endif // __CGameStateGameMainMenu_H
+#endif // __CGAMESTATEGAME_H

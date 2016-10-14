@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 // Package     : Octaria
-// File        : CGameStateManager.h
+// File        : CGameStateGame.cpp
 // Author      : PRADAL & co
 // Description : -
 // PlatForm    : All
@@ -8,13 +8,13 @@
 
 #include "StdAfx.h"
 
-CGameStateManager g_gameStateManager;
-
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-/*explicit*/ CGameStateManager::CGameStateManager(void)
-: m_sGameState(2)
+/*explicit*/ CGameStateGame::CGameStateGame(void)
+: CGameState()
+, m_eState(e_state_enter)
+, m_aPoulpeList()
 {
 
 }
@@ -22,7 +22,7 @@ CGameStateManager g_gameStateManager;
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-/*virtual*/ CGameStateManager::~CGameStateManager(void)
+/*virtual*/ CGameStateGame::~CGameStateGame(void)
 {
 
 }
@@ -30,111 +30,108 @@ CGameStateManager g_gameStateManager;
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void CGameStateManager::Initialize(void)
+/*virtual*/ void CGameStateGame::Initialize(void)
 {
-	m_apGameState[e_game_state_main_menu] = new CGameStateMainMenu();
-	SH_ASSERT(shNULL != m_apGameState[e_game_state_main_menu]);
-	m_apGameState[e_game_state_main_menu]->Initialize();
 
-	m_apGameState[e_game_state_game] = new CGameStateGame();
-	SH_ASSERT(shNULL != m_apGameState[e_game_state_game]);
-	m_apGameState[e_game_state_game]->Initialize();
-	
-	Push(e_game_state_game);
 }
 
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void CGameStateManager::Release(void)
+/*virtual*/ void CGameStateGame::Release(void)
 {
-	for (int eGameState = 0 ; eGameState < e_game_state_max ; ++eGameState)
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+/*virtual*/ void CGameStateGame::Activate(void)
+{
+	//
+	// Load level
+	CShIdentifier levelIdentifier("octa_level_game");
+	bool resLoad = ShLevel::Load(levelIdentifier);
+	SH_ASSERT(resLoad);
+
+	CGamePoulpe * pPoulpe = new (CGamePoulpe);
+	pPoulpe->Initialize(levelIdentifier);
+	m_aPoulpeList.Add(pPoulpe);
+
+	m_eState = e_state_enter;
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+/*virtual*/ void CGameStateGame::DeActivate(void)
+{
+	int nPoulpeCount = m_aPoulpeList.GetCount();
+	for (int iPoulpe = 0; iPoulpe < nPoulpeCount; ++iPoulpe)
 	{
-		SH_SAFE_RELEASE_DELETE(m_apGameState[eGameState]);
+		m_aPoulpeList[iPoulpe]->Release();
+		SH_SAFE_DELETE(m_aPoulpeList[iPoulpe]);
 	}
-
-	m_sGameState.Empty();
+	m_aPoulpeList.Empty();
 }
 
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void CGameStateManager::Update(float deltaTimeInMs)
+/*virtual*/ void CGameStateGame::Update(float deltaTimeInMs)
 {
-	if (shNULL != GetCurrentGameState())
+	switch(m_eState)
 	{
-		GetCurrentGameState()->Update(deltaTimeInMs);
+		case e_state_enter:
+		{
+			// intitialize what you need
+			m_eState = e_state_playing;
+		}
+		break;
+
+		case e_state_playing:
+		{
+			g_pInputPlayer->Update();
+
+			bool isLeft		= g_pInputPlayer->IsLeftPressed();
+			bool isRight	= g_pInputPlayer->IsRightPressed();
+
+			int nPoulpeCount = m_aPoulpeList.GetCount();
+			for (int iPoulpe = 0; iPoulpe < nPoulpeCount; ++iPoulpe)
+			{
+				m_aPoulpeList[iPoulpe]->Update(isLeft, isRight);
+			}
+
+		}break;
+		
+		case e_state_end:
+		{
+			g_gameStateManager.Pop();
+			g_gameStateManager.Push(CGameStateManager::e_game_state_main_menu);
+		}
+		break;
 	}
 }
 
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void CGameStateManager::Push(EGameState eGameState)
+/*virtual*/ void CGameStateGame::OnTouchDown(int iTouch, float positionX, float positionY)
 {
-	CGameState * pCurrentGameState = GetCurrentGameState();
-	if (shNULL != pCurrentGameState)
-	{
-		pCurrentGameState->DeActivate();
-	}
 
-	m_apGameState[eGameState]->Activate();
-	m_sGameState.Push(m_apGameState[eGameState]);
 }
 
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void CGameStateManager::Pop(void)
+/*virtual*/ void CGameStateGame::OnTouchUp(int iTouch, float positionX, float positionY)
 {
-	CGameState * pCurrentGameState = GetCurrentGameState();
-	if (shNULL != pCurrentGameState)
-	{
-		pCurrentGameState->DeActivate();
-	}
 
-	m_sGameState.Pop(pCurrentGameState);
-	
-	if (shNULL != GetCurrentGameState())
-	{
-		GetCurrentGameState()->Activate();
-	}
 }
 
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-CGameState * CGameStateManager::GetCurrentGameState(void)
+/*virtual*/ void CGameStateGame::OnTouchMove(int iTouch, float positionX, float positionY)
 {
-	if (m_sGameState.IsEmpty())
-	{
-		return(shNULL);
-	}
 
-	return(m_sGameState.GetTop());
 }
-
-//--------------------------------------------------------------------------------------------------
-/// @todo comment
-//--------------------------------------------------------------------------------------------------
-/*virtual*/ void CGameStateManager::OnTouchDown(int iTouch, float positionX, float positionY)
-{
-	GetCurrentGameState()->OnTouchDown(iTouch, positionX, positionY);
-}
-
-//--------------------------------------------------------------------------------------------------
-/// @todo comment
-//--------------------------------------------------------------------------------------------------
-/*virtual*/ void CGameStateManager::OnTouchUp(int iTouch, float positionX, float positionY)
-{
-	GetCurrentGameState()->OnTouchUp(iTouch, positionX, positionY);
-}
-
-//--------------------------------------------------------------------------------------------------
-/// @todo comment
-//--------------------------------------------------------------------------------------------------
-/*virtual*/ void CGameStateManager::OnTouchMove(int iTouch, float positionX, float positionY)
-{
-	GetCurrentGameState()->OnTouchMove(iTouch, positionX, positionY);
-}
-
