@@ -147,6 +147,10 @@ void CGamePoulpe::UpdateFromInputs(bool isLeft, bool isRight)
 				m_currentId = (m_currentId + 1) % m_aPoulpeAnimation[m_direction].GetCount();
 			}
 		}
+		else
+		{
+			m_currentId = 0;
+		}
 
 		ShEntity2::SetWorldPosition2(m_aPoulpeAnimation[m_direction][m_currentId], currentPos.m_x, currentPos.m_y);
 		ShEntity2::SetShow(m_aPoulpeAnimation[m_direction][m_currentId], true);

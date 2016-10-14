@@ -67,7 +67,7 @@ source_group("Game\\Menu" FILES ${SOURCES_mainMenu})
 
 # Poulpe caracter files
 set(SOURCES_poulpe Sources/CGamePoulpe.cpp Sources/CGamePoulpe.h)
-source_group("Game\\Caracter" FILES ${SOURCES_poulpe})
+source_group("Game\\Character" FILES ${SOURCES_poulpe})
 
 set(SOURCES ${SOURCES_StdAfx} ${SOURCES_main} ${SOURCES_resource} ${SOURCES_gameState} ${SOURCES_stateManager} ${SOURCES_multiResolutionApplication} ${SOURCES_mainMenu} ${SOURCES_input} ${SOURCES_game} ${SOURCES_poulpe})
 
