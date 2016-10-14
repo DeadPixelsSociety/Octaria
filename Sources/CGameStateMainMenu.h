@@ -54,7 +54,8 @@ protected:
 private:
 	EState				m_eState;
 
-	ShEntity2 *			m_pCreatedPoulpe;
+	ShPrefab *			pPrefabCreate;
+	ShPrefab *			pPrefabFind;
 };
 
 #endif // __CGameStateMainMenu_H

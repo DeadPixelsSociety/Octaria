@@ -40,7 +40,7 @@ void CGameStateManager::Initialize(void)
 	SH_ASSERT(shNULL != m_apGameState[e_game_state_game]);
 	m_apGameState[e_game_state_game]->Initialize();
 	
-	Push(e_game_state_game);
+	Push(e_game_state_main_menu);
 }
 
 //--------------------------------------------------------------------------------------------------

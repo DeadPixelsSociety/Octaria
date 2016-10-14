@@ -14,7 +14,8 @@
 /*explicit*/ CGameStateMainMenu::CGameStateMainMenu(void)
 : CGameState()
 , m_eState(e_state_enter)
-, m_pCreatedPoulpe(shNULL)
+, pPrefabCreate(shNULL)
+, pPrefabFind(shNULL)
 {
 
 }
@@ -40,7 +41,8 @@
 //--------------------------------------------------------------------------------------------------
 /*virtual*/ void CGameStateMainMenu::Release(void)
 {
-	m_pCreatedPoulpe = shNULL;
+	pPrefabCreate = shNULL;
+	pPrefabFind = shNULL;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -54,8 +56,11 @@
 	bool resLoad = ShLevel::Load(levelIdentifier);
 	SH_ASSERT(resLoad);
 
-	m_pCreatedPoulpe = ShEntity2::Create(levelIdentifier, GID(NULL), GID(layer_default), CShIdentifier("octaria"), CShIdentifier("icone_poulpe"), CShVector3(-100.0f, -100.0f, 1.0f), CShEulerAngles(), CShVector3(5.0f, 5.0f, 1.0f));
-	SH_ASSERT(shNULL != m_pCreatedPoulpe);
+	pPrefabCreate = ShPrefab::Create(levelIdentifier, CShIdentifier("bloc_pierre_001"), CShIdentifier("bloc_pierre"), CShIdentifier("layer_default"), CShVector3(100.0f, 100.0f, 1.0f), CShEulerAngles(), CShVector3(4.0f, 4.0f, 0.0f));
+	SH_ASSERT(shNULL != pPrefabCreate);
+
+	pPrefabFind = ShPrefab::Find(levelIdentifier, CShIdentifier("prefab_bloc_pierre_001"));
+	SH_ASSERT(shNULL != pPrefabFind);
 
 	m_eState = e_state_enter;
 }
