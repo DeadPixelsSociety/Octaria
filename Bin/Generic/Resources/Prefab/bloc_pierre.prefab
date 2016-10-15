@@ -19,6 +19,8 @@
             <data_set_list>
                 <data_set name="bloc_identity" instance_name="bloc_identity_0">
                     <data type="string_editable" name="ressource" value="pierre"/>
+                    <data type="int" name="fgenerations" value="20"/>
+                    <data type="int" name="fgeneratione" value="50"/>
                 </data_set>
             </data_set_list>
         </entity2>
