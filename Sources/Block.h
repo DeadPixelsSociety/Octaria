@@ -23,6 +23,10 @@ private:
 	CShVector2				m_v2Size;
 	bool					m_bShow;
 
+	//Valeur dans lesquels le block est genéré
+	int						m_iStartV;
+	int						m_iEndV;
+
 };
 
 #endif //__BLOCK__H

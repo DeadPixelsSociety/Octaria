@@ -17,10 +17,57 @@ Block::Block(ShPrefab * prefab)
 		//Si l'element actuel est le sprite 2D, on le recupere
 		if (ShObject::GetType(prefabElm[i]) == ShObject::e_type_entity2)
 		{
+			//Recuperation des informations de level et d'entite éd
 			CShIdentifier poolid = ShObject::GetPoolIdentifier(prefabElm[i]);
 			CShIdentifier id = ShObject::GetIdentifier(prefabElm[i]);
+
+			//Creation de l'entite 2D
 			m_pBlockEntity = ShEntity2::Create(poolid, GID(NULL), GID(layer_default), CShIdentifier("octaria"), id, CShVector3(-100.0f, -100.0f, 1.0f), CShEulerAngles(), CShVector3(5.0f, 5.0f, 1.0f));
 			SH_ASSERT(shNULL != m_pBlockEntity);
+			
+			//Parsing du dataset
+			int dataSetCount = ShObject::GetDataSetCount(prefabElm[i]);
+
+			
+
+			for (int j = 0; j < dataSetCount; ++j)
+			{
+				ShDataSet * current_ds = ShObject::GetDataSet(prefabElm[i], j);
+				int nb_data = ShDataSet::GetDataCount(current_ds);
+				int bite;
+				for (int k = 0; k < nb_data; ++k)
+				{
+					ShDataSet::EDataType current_type = ShDataSet::GetDataType(current_ds, k);
+					CShIdentifier c_id;
+
+
+					switch (current_type)
+					{
+						//Recuperation des valeurs de type int
+						case ShDataSet::e_data_type_int:
+							c_id = ShDataSet::GetDataIdentifier(current_ds, k);
+
+							//Si valeur representant la borne inferrieur de generation procedurale
+							if (c_id == CShIdentifier("fgenerations"))
+								ShDataSet::GetDataValue(current_ds, k, m_iStartV);
+
+							//Si valeur representant la borne supperieur de generation procedurale
+							if (c_id == CShIdentifier("fgeneratione"))
+								ShDataSet::GetDataValue(current_ds, k, m_iEndV);
+							break;
+
+						default:
+							break;
+					}
+				}
+
+				
+
+				int sortie;
+				bool tetest = ShDataSet::GetDataValue(ShObject::GetDataSet(prefabElm[i], j), 1, sortie);
+				int yolo = 0;
+			}
+			
 			int t = 0;
 		}
 	}
