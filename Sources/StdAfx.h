@@ -32,6 +32,8 @@
 
 #include "CGamePoulpe.h"
 
+#include "Block.h"
+
 //
 // Project callbacks
 void OnActivate(void);
