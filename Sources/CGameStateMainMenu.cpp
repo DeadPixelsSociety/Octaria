@@ -61,8 +61,8 @@
 
 	_bBlockTest = new Block(pPrefabCreate);
 
-	pPrefabFind = ShPrefab::Find(levelIdentifier, CShIdentifier("prefab_bloc_pierre_001"));
-	SH_ASSERT(shNULL != pPrefabFind);
+	/*pPrefabFind = ShPrefab::Find(levelIdentifier, CShIdentifier("prefab_bloc_pierre_001"));
+	SH_ASSERT(shNULL != pPrefabFind);*/
 
 	FieldManager fm(CShVector2(10, 10));
 
@@ -93,7 +93,7 @@
 
 		case e_state_playing:
 		{
-
+			_bBlockTest->Update();
 		}break;
 		
 		case e_state_end:

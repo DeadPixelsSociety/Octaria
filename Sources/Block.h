@@ -18,8 +18,9 @@ private:
 	ShPrefab		*		m_pBlockPref;
 	ShEntity2		*		m_pBlockEntity;
 
-	//Coordonnees, Taille et visibilité
+	//Coordonnees(concrete, à l'écran), Coordonnées(Abstraite, dans un tableau), Taille et visibilité
 	CShVector2				m_v2Position;
+	CShVector2				m_v2AbstractPosition;
 	CShVector2				m_v2Size;
 	bool					m_bShow;
 

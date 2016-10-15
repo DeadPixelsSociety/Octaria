@@ -2,7 +2,7 @@
 
 Block::Block(ShPrefab * prefab)
 	: m_pBlockPref(prefab)
-	, m_bShow(true)
+	, m_bShow(false)
 	, m_pBlockEntity(shNULL)
 {
 	CShArray<ShObject *> prefabElm;
@@ -27,9 +27,6 @@ Block::Block(ShPrefab * prefab)
 			
 			//Parsing du dataset
 			int dataSetCount = ShObject::GetDataSetCount(prefabElm[i]);
-
-			
-
 			for (int j = 0; j < dataSetCount; ++j)
 			{
 				ShDataSet * current_ds = ShObject::GetDataSet(prefabElm[i], j);
@@ -88,4 +85,5 @@ void Block::setPosition(int x, int y)
 void Block::Update()
 {
 	ShEntity2::SetWorldPosition2(m_pBlockPref, m_v2Position.m_x, m_v2Position.m_y);
+	ShEntity2::SetShow(m_pBlockEntity, m_bShow);
 }
