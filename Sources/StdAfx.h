@@ -33,6 +33,7 @@
 #include "CGamePoulpe.h"
 
 #include "Block.h"
+#include "FieldManager.h"
 
 //
 // Project callbacks

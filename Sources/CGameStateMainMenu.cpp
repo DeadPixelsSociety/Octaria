@@ -56,7 +56,7 @@
 	bool resLoad = ShLevel::Load(levelIdentifier);
 	SH_ASSERT(resLoad);
 
-	pPrefabCreate = ShPrefab::Create(levelIdentifier, CShIdentifier("bloc_pierre_001"), CShIdentifier("bloc_pierre"), CShIdentifier("layer_default"), CShVector3(100.0f, 100.0f, 1.0f), CShEulerAngles(), CShVector3(4.0f, 4.0f, 0.0f));
+	pPrefabCreate = ShPrefab::Create(levelIdentifier, CShIdentifier("bloc_pierre_001"), CShIdentifier("bloc_pierre"), CShIdentifier("layer_default"), CShVector3(0.0f, 0.0f, 1.0f), CShEulerAngles(), CShVector3(1.0f, 1.0f, 1.0f));
 	SH_ASSERT(shNULL != pPrefabCreate);
 
 	_bBlockTest = new Block(pPrefabCreate);
