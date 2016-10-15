@@ -34,6 +34,7 @@
 
 #include "Block.h"
 #include "FieldManager.h"
+#include "ProceduralGeneration.h"
 
 //
 // Project callbacks
