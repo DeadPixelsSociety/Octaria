@@ -59,6 +59,8 @@
 	pPrefabCreate = ShPrefab::Create(levelIdentifier, CShIdentifier("bloc_pierre_001"), CShIdentifier("bloc_pierre"), CShIdentifier("layer_default"), CShVector3(100.0f, 100.0f, 1.0f), CShEulerAngles(), CShVector3(4.0f, 4.0f, 0.0f));
 	SH_ASSERT(shNULL != pPrefabCreate);
 
+	_bBlockTest = new Block(pPrefabCreate);
+
 	pPrefabFind = ShPrefab::Find(levelIdentifier, CShIdentifier("prefab_bloc_pierre_001"));
 	SH_ASSERT(shNULL != pPrefabFind);
 

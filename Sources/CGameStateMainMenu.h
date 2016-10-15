@@ -9,7 +9,7 @@
 #ifndef __CGameStateMainMenu_H
 #define __CGameStateMainMenu_H
 
-
+#include "Block.h"
 //
 /// Level game state
 class CGameStateMainMenu : public CGameState
@@ -56,6 +56,8 @@ private:
 
 	ShPrefab *			pPrefabCreate;
 	ShPrefab *			pPrefabFind;
+
+	Block	 *			_bBlockTest;
 };
 
 #endif // __CGameStateMainMenu_H
