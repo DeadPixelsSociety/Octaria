@@ -64,6 +64,8 @@
 	pPrefabFind = ShPrefab::Find(levelIdentifier, CShIdentifier("prefab_bloc_pierre_001"));
 	SH_ASSERT(shNULL != pPrefabFind);
 
+	FieldManager fm(CShVector2(10, 10));
+
 	m_eState = e_state_enter;
 }
 
