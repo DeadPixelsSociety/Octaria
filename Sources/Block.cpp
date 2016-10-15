@@ -31,7 +31,6 @@ Block::Block(ShPrefab * prefab)
 			{
 				ShDataSet * current_ds = ShObject::GetDataSet(prefabElm[i], j);
 				int nb_data = ShDataSet::GetDataCount(current_ds);
-				int bite;
 				for (int k = 0; k < nb_data; ++k)
 				{
 					ShDataSet::EDataType current_type = ShDataSet::GetDataType(current_ds, k);

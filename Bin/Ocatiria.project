@@ -14,11 +14,11 @@
             <scene_explorer_item scene_explorer_item_name="Root" scene_explorer_item_text="Root" scene_explorer_item_type="0" scene_explorer_item_expanded="false" scene_explorer_item_parent="NULL"/>
         </scene_explorer>
         <recent_file_list max_recent_file="5">
-            <recent_file name_file="octa_level_warField" type="level"/>
-            <recent_file name_file="octa_level_game" type="level"/>
-            <recent_file name_file="octa_level_warfield" type="level"/>
             <recent_file name_file="bloc_pierre" type="prefab"/>
             <recent_file name_file="octa_level_main_menu" type="level"/>
+            <recent_file name_file="bloc_herbe" type="level"/>
+            <recent_file name_file="bloc_terre" type="level"/>
+            <recent_file name_file="bloc_charbon" type="level"/>
         </recent_file_list>
     </editor_settings>
     <plugins/>
