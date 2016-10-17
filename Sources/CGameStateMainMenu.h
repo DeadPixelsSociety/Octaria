@@ -57,7 +57,7 @@ private:
 	ShPrefab *			pPrefabCreate;
 	ShPrefab *			pPrefabFind;
 
-	Block	 *			_bBlockTest;
+	Block	 *			m_blockTest;
 };
 
 #endif // __CGameStateMainMenu_H

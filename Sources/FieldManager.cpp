@@ -1,5 +1,16 @@
+//--------------------------------------------------------------------------------------------------
+// Package     : Octaria
+// File        : FieldManager.cpp
+// Author      : PRADAL & co
+// Description : -
+// PlatForm    : All
+//--------------------------------------------------------------------------------------------------
+
 #include "StdAfx.h";
 
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
 FieldManager::FieldManager(CShVector2 size)
 : m_csMapSize(size)
 , m_iStep(10)
@@ -9,20 +20,28 @@ FieldManager::FieldManager(CShVector2 size)
 
 	//Creation du tableau 2D
 	m_csMap = new MAPPROC*[m_csMapSize.m_x];
+
 	for (int i = 0; i < m_csMapSize.m_x; ++i)
+	{
 		m_csMap[i] = new MAPPROC[m_csMapSize.m_y];
+	}
 
 	//Remplissage de la map
 	GenerateMap();
 
 }
-
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
 FieldManager::~FieldManager()
 {
+
 }
 
-
-void FieldManager::GenerateMap()
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+void FieldManager::GenerateMap(void)
 {
 	for (int x = 0; x < m_csMapSize.m_x; ++x)
 	{

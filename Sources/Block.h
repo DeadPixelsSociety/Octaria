@@ -1,3 +1,11 @@
+//--------------------------------------------------------------------------------------------------
+// Package     : Octaria
+// File        : Block.h
+// Author      : PRADAL & co
+// Description : -
+// PlatForm    : All
+//--------------------------------------------------------------------------------------------------
+
 #ifndef __BLOCK__H
 #define __BLOCK__H
 
@@ -5,12 +13,17 @@ class Block
 {
 public:
 
-	Block(ShPrefab * prefab);
+	explicit	Block	(void);
+	virtual		~Block	(void);
 
-	void setPosition(CShVector2 position);
-	void setPosition(int x, int y);
 
-	void Update();
+	void			Initialize		(ShPrefab * pPrefab);
+	void			Release			(void);
+
+	void			setPosition		(CShVector2 position);
+	void			setPosition		(int x, int y);
+
+	void			Update			();
 
 private:
 
