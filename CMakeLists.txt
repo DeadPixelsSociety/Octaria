@@ -13,6 +13,7 @@ include_directories("${SH_ROOT_DIR}/include")
 find_library(SH_SDK_LIB			"ShSDK"				PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
 find_library(SH_ENTRYPOINT_LIB	"ShEntryPoint"		PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
 find_library(SH_STUB_LIB		"StubUserSystem"	PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
+find_library(SH_CORE_LIB		"ShCore"			PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
 
 if (WIN32)
 	find_package(DirectX9 REQUIRED)
@@ -23,9 +24,11 @@ if (WIN32)
 	
 endif (WIN32)
 
+
 if (MSVC)
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 	STRING(REPLACE "/MDd" "/MD" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+	STRING(REPLACE "D_DEBUG" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 	message("${CMAKE_CXX_FLAGS_DEBUG}")
 endif (MSVC)
 
@@ -75,5 +78,5 @@ set(SOURCES ${SOURCES_StdAfx} ${SOURCES_main} ${SOURCES_resource} ${SOURCES_game
 
 add_executable(Octaria WIN32 ${SOURCES_MAIN} ${SOURCES})
 set_property(TARGET Octaria APPEND PROPERTY COMPILE_DEFINITIONS "SH_MASTER=1")
-target_link_libraries(Octaria ${SH_SDK_LIB} ${SH_ENTRYPOINT_LIB} ${SH_STUB_LIB})
+target_link_libraries(Octaria ${SH_SDK_LIB} ${SH_ENTRYPOINT_LIB} ${SH_STUB_LIB} ${SH_CORE_LIB})
 target_link_libraries(Octaria ${DirectX9_LIBRARIES} ${XInput_LIBRARIES} ${XAudio_LIBRARY})
