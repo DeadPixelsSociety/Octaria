@@ -17,13 +17,14 @@ public:
 	virtual		~Block	(void);
 
 
-	void			Initialize		(ShPrefab * pPrefab);
-	void			Release			(void);
+	void				Initialize		(ShPrefab * pPrefab);
+	void				Release			(void);
 
-	void			setPosition		(CShVector2 position);
-	void			setPosition		(int x, int y);
+	void				SetPosition		(const CShVector2 & position);
 
-	void			Update			();
+	const CShVector2 &	GetPosition		();
+
+	void				Update			();
 
 private:
 

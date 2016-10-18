@@ -57,7 +57,7 @@ void ShEntryPoint::OnPostInitialize(void)
 	//
 	// Create camera
 	ShCamera * pCamera = ShCamera::Create(GID(global), GID(camera), false);
-	SH_ASSERT(NULL != pCamera);
+	SH_ASSERT(shNULL != pCamera);
 
 	ShCamera::SetPosition(pCamera, CShVector3(0.0f, 0.0f, 1000.0f));
 	ShCamera::SetTarget(pCamera, CShVector3(0.0f, 0.0f, 0.0f));
