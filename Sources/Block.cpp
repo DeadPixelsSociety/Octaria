@@ -91,21 +91,9 @@ void Block::Initialize(ShPrefab * pPrefab)
 						break;
 					}
 				}
-
-				//int sortie;
-				//bool tetest = ShDataSet::GetDataValue(ShObject::GetDataSet(aPrefabElm[i], j), 1, sortie);
 			}
 		}
 	}
-}
-
-//--------------------------------------------------------------------------------------------------
-/// @todo comment
-//--------------------------------------------------------------------------------------------------
-void Block::Update()
-{
-	ShEntity2::SetWorldPosition2(m_pBlockEntity, 100.0f, 100.0f);
-	ShEntity2::SetShow(m_pBlockEntity, true);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -122,4 +110,20 @@ void Block::SetPosition(const CShVector2 & position)
 const CShVector2 & Block::GetPosition()
 {
 	return(m_v2Position);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+float Block::GetWidth(void)
+{
+	return ShEntity2::GetWidth(m_pBlockEntity);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+float Block::GetHeight(void)
+{
+	return ShEntity2::GetHeight(m_pBlockEntity);
 }

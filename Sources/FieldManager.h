@@ -29,7 +29,7 @@ class FieldManager
 {
 public:
 
-	FieldManager	(CShVector2 size);
+	FieldManager	(const CShVector2 & size);
 	~FieldManager	();
 
 	void						GetFieldBlockType	(CShArray<EBlocValue> & aFieldValues);

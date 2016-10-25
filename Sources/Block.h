@@ -22,9 +22,10 @@ public:
 
 	void				SetPosition		(const CShVector2 & position);
 
-	const CShVector2 &	GetPosition		();
+	const CShVector2 &	GetPosition		(void);
 
-	void				Update			();
+	float				GetWidth		(void);
+	float				GetHeight		(void);
 
 private:
 

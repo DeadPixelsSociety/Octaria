@@ -11,7 +11,7 @@
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-FieldManager::FieldManager(CShVector2 size)
+FieldManager::FieldManager(const CShVector2 & size)
 : m_csMapSize(size)
 , m_iStep(10)
 , m_iOctave(10)

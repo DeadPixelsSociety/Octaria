@@ -57,32 +57,61 @@
 
 	//
 	// Field generation
-	FieldManager fieldManager(CShVector2(10, 10));
+	int nbBlocX = 45;
+	int nbBlocY = 24;
+	int nBlockCount = nbBlocX * nbBlocY;
+	float blocWidth  = 64.0f;	// hardcoded value, getting from sprite
+	float blocHeight = 64.0f;	// ^	
+
+	FieldManager fieldManager(CShVector2(nbBlocX, nbBlocY));
 
 	CShArray<EBlocValue> aFieldBlockType;
 	fieldManager.GetFieldBlockType(aFieldBlockType);
+	SH_ASSERT(nBlockCount == aFieldBlockType.GetCount());
 
 	CShArray<CShVector2> aFieldCoord;
 	fieldManager.GetFieldCoord(aFieldCoord);
+	SH_ASSERT(nBlockCount == aFieldCoord.GetCount());
 
-	int nBlockCount = aFieldBlockType.GetCount();
+	//
+	// Get n°0 bloc coord
+	float coordX = 0.0f;
+	float coordY = 0.0f;
+
+	coordX -= ((nbBlocX / 2) * blocWidth);
+	if (0 != (nbBlocX % 2))
+	{
+		coordX -= blocWidth / 2;
+	}
+
+	coordY -= ((nbBlocY / 2) * blocHeight);
+	if (0 != (nbBlocY % 2))
+	{
+		coordY -= blocHeight / 2;
+	}
+
+	//
+	// Generate and place all blocs
 	for (int i = 0; i < nBlockCount; ++i)
 	{
 		if (e_bloc_vide != aFieldBlockType[i])
 		{
-			float coordX = aFieldCoord[i].m_x;
-			float coordY = aFieldCoord[i].m_y;
-			ShPrefab * pPrefab = ShPrefab::Create(levelIdentifier, CShIdentifier("ntm"), CShIdentifier(g_aPrefabName[aFieldBlockType[i]]), CShIdentifier("layer_default"), CShVector3(coordX, coordY, 1.0f), CShEulerAngles(), CShVector3(1.0f, 1.0f, 1.0f));
+			float currentX, currentY;
+
+			currentX = coordX + (blocWidth * aFieldCoord[i].m_x);
+			currentY = coordY + (blocHeight * aFieldCoord[i].m_y);
+			ShPrefab * pPrefab = ShPrefab::Create(levelIdentifier, CShIdentifier("ntm"), CShIdentifier(g_aPrefabName[aFieldBlockType[i]]), CShIdentifier("layer_default"), CShVector3(currentX, currentY, 1.0f), CShEulerAngles(), CShVector3(1.0f, 1.0f, 1.0f));
 			SH_ASSERT(shNULL != pPrefab);
 
 			Block * pBlock = new Block();
 			pBlock->Initialize(pPrefab);
+
+			m_aBlockList.Add(pBlock);
 		}
-		else
+		else // void bloc
 		{
 			m_aBlockList.Add(shNULL);
 		}
-
 	}
 
 	//
