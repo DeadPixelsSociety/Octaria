@@ -9,10 +9,6 @@
 #ifndef _PROCGEN_
 #define _PROCGEN_
 
-#include <stdlib.h>
-#include <math.h>
-#include <time.h>
-
 class ProceduralGeneration
 {
 

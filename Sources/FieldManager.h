@@ -41,7 +41,7 @@ private:
 
 private:
 
-	ProceduralGeneration *		m_pgGenerater;		// Classe qui gere la generation procédurale
+	ProceduralGeneration *		m_pGenerator;		// Classe qui gere la generation procédurale
 	CShVector2					m_csMapSize;		// Taille de la map contenant les valeurs de la generation procedurale
 	MAPPROC **					m_csMap;			// Map contenant les valeurs de la generation procedurale
 

@@ -8,6 +8,7 @@
 
 #include "StdAfx.h"
 
+#include "time.h"
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
@@ -23,12 +24,12 @@ ProceduralGeneration::ProceduralGeneration(int l, int h, int p, int n)
 		SH_SAFE_FREE(m_valeurs2D);
 	}
 
-    m_longueur_max = (int) ceil(m_longueur * pow(2, m_nombre_octaves2D  - 1)  / m_pas2D);
+    m_longueur_max =  (int) ceil(m_longueur * pow(2, m_nombre_octaves2D  - 1)  / m_pas2D);
     int hauteur_max = (int) ceil(m_hauteur * pow(2, m_nombre_octaves2D  - 1)  / m_pas2D);
 
     m_valeurs2D = (double*) malloc(sizeof(double) * m_longueur_max * hauteur_max);
 
-    srand(time(NULL));
+    srand(time(shNULL));
 
 	int nVal = m_longueur_max * hauteur_max;
 	for (int i = 0; i < nVal; ++i)

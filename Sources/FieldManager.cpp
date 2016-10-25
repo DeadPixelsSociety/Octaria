@@ -16,7 +16,7 @@ FieldManager::FieldManager(const CShVector2 & size)
 , m_iStep(10)
 , m_iOctave(10)
 {
-	m_pgGenerater = new ProceduralGeneration(m_csMapSize.m_x + 1, m_csMapSize.m_y + 1, m_iStep, m_iOctave);
+	m_pGenerator = new ProceduralGeneration(m_csMapSize.m_x + 1, m_csMapSize.m_y + 1, m_iStep, m_iOctave);
 
 	//Creation du tableau 2D
 	m_csMap = new MAPPROC*[m_csMapSize.m_x];
@@ -52,7 +52,7 @@ void FieldManager::GenerateMap(void)
 			m_csMap[x][y].y = y;
 
 			//Recuperation d'une valeur lisse
-			m_csMap[x][y].value = (int)(m_pgGenerater->fonction_bruit2D(m_csMap[x][y].x, m_csMap[x][y].y) * 255);
+			m_csMap[x][y].value = (int)(m_pGenerator->fonction_bruit2D(x, y) * 255);
 		}
 	}
 }
