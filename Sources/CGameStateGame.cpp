@@ -15,6 +15,8 @@
 : CGameState()
 , m_eState(e_state_enter)
 , m_aPoulpeList()
+, m_aBlockList()
+
 {
 
 }
@@ -53,6 +55,38 @@
 	bool resLoad = ShLevel::Load(levelIdentifier);
 	SH_ASSERT(resLoad);
 
+	//
+	// Field generation
+	FieldManager fieldManager(CShVector2(10, 10));
+
+	CShArray<EBlocValue> aFieldBlockType;
+	fieldManager.GetFieldBlockType(aFieldBlockType);
+
+	CShArray<CShVector2> aFieldCoord;
+	fieldManager.GetFieldCoord(aFieldCoord);
+
+	int nBlockCount = aFieldBlockType.GetCount();
+	for (int i = 0; i < nBlockCount; ++i)
+	{
+		if (e_bloc_vide != aFieldBlockType[i])
+		{
+			float coordX = aFieldCoord[i].m_x;
+			float coordY = aFieldCoord[i].m_y;
+			ShPrefab * pPrefab = ShPrefab::Create(levelIdentifier, CShIdentifier("ntm"), CShIdentifier(g_aPrefabName[aFieldBlockType[i]]), CShIdentifier("layer_default"), CShVector3(coordX, coordY, 1.0f), CShEulerAngles(), CShVector3(1.0f, 1.0f, 1.0f));
+			SH_ASSERT(shNULL != pPrefab);
+
+			Block * pBlock = new Block();
+			pBlock->Initialize(pPrefab);
+		}
+		else
+		{
+			m_aBlockList.Add(shNULL);
+		}
+
+	}
+
+	//
+	// Character
 	CGamePoulpe * pPoulpe = new (CGamePoulpe);
 	pPoulpe->Initialize(levelIdentifier);
 	m_aPoulpeList.Add(pPoulpe);

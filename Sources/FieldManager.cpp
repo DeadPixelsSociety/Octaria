@@ -56,3 +56,52 @@ void FieldManager::GenerateMap(void)
 		}
 	}
 }
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+void FieldManager::GetFieldBlockType(CShArray<EBlocValue> & aFieldValues)
+{
+	for (int x = 0; x < m_csMapSize.m_x; ++x)
+	{
+		for (int y = 0; y < m_csMapSize.m_y; ++y)
+		{
+			int idBloc = m_csMap[x][y].value;
+
+			if (idBloc >= 20 && idBloc < 50)
+			{
+				aFieldValues.Add(e_bloc_pierre);
+			}
+			else if (idBloc >= 50 && idBloc < 70)
+			{
+				aFieldValues.Add(e_bloc_herbe);
+			}
+			else if (idBloc >= 70 && idBloc < 100)
+			{
+				aFieldValues.Add(e_bloc_terre);
+			}
+			else if (idBloc >= 100 && idBloc < 130)
+			{
+				aFieldValues.Add(e_bloc_charbon);
+			}
+			else
+			{
+				aFieldValues.Add(e_bloc_vide);
+			}
+		}
+	}
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+void FieldManager::GetFieldCoord(CShArray<CShVector2> & aFieldCoord)
+{
+	for (int x = 0; x < m_csMapSize.m_x; ++x)
+	{
+		for (int y = 0; y < m_csMapSize.m_y; ++y)
+		{
+			aFieldCoord.Add(CShVector2(m_csMap[x][y].x, m_csMap[x][y].y));
+		}
+	}
+}

@@ -17,12 +17,41 @@
 #define DISPLAY_HALF_WIDTH 1136
 
 //
+// Game data
+
+enum EBlocValue
+{
+	e_bloc_vide,		//<	default
+	e_bloc_pierre,		//<	20-50
+	e_bloc_herbe,		//<	50-70
+	e_bloc_terre,		//<	70-100
+	e_bloc_charbon,		//<	100-130
+
+	e_bloc_max
+};
+
+static const char * g_aPrefabName[e_bloc_max] =
+{
+	"bloc_vide",		//< not used, void bloc
+	"bloc_pierre",		//< 
+	"bloc_herbe",		//< 
+	"bloc_terre",		//<
+	"bloc_charbon",		//<
+};
+
+//
 // Shine SDK includes
 #include "ShSDK/ShSDK.h"
+
+#include "Block.h"
+#include "FieldManager.h"
+#include "ProceduralGeneration.h"
 
 #include "CMultiResolutionApplication.h"
 
 #include "Inputs.h"
+
+#include "CGamePoulpe.h"
 
 #include "CGameState.h"
 #include "CGameStateManager.h"
@@ -30,11 +59,6 @@
 #include "CGameStateGame.h"
 #include "CGameStateMainMenu.h"
 
-#include "CGamePoulpe.h"
-
-#include "Block.h"
-#include "FieldManager.h"
-#include "ProceduralGeneration.h"
 
 //
 // Project callbacks
@@ -57,5 +81,6 @@ extern ShUser * g_pCurrentUser;
 extern Inputs * g_pInputPlayer;
 
 void SetCurrentUser(ShUser * pUser);
+
 
 #endif // __SHPROJECT_OCTARIA_STDAFX_H

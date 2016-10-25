@@ -16,6 +16,15 @@ typedef struct
 
 #include "ProceduralGeneration.h"
 
+/*
+	20-50	: Pierre
+	50-70	: Herbe
+	70-100	: Terre
+	100-130	: Charbon
+
+	Reste	: Vide
+*/
+
 class FieldManager
 {
 public:
@@ -23,10 +32,15 @@ public:
 	FieldManager	(CShVector2 size);
 	~FieldManager	();
 
-private:
-	void						GenerateMap(void);	// Genere procéduralement la map 
+	void						GetFieldBlockType	(CShArray<EBlocValue> & aFieldValues);
+	void						GetFieldCoord		(CShArray<CShVector2> & aFieldCoord);
 
 private:
+
+	void						GenerateMap		(void);	// Genere procéduralement la map 
+
+private:
+
 	ProceduralGeneration *		m_pgGenerater;		// Classe qui gere la generation procédurale
 	CShVector2					m_csMapSize;		// Taille de la map contenant les valeurs de la generation procedurale
 	MAPPROC **					m_csMap;			// Map contenant les valeurs de la generation procedurale

@@ -56,6 +56,8 @@ protected:
 private:
 	EState						m_eState; // Game state
 
+	CShArray<Block *>			m_aBlockList;
+
 	CShArray<CGamePoulpe *>		m_aPoulpeList;
 
 };

@@ -14,9 +14,6 @@
 /*explicit*/ CGameStateMainMenu::CGameStateMainMenu(void)
 : CGameState()
 , m_eState(e_state_enter)
-, pPrefabCreate(shNULL)
-, pPrefabFind(shNULL)
-, m_blockTest(shNULL)
 {
 
 }
@@ -42,9 +39,6 @@
 //--------------------------------------------------------------------------------------------------
 /*virtual*/ void CGameStateMainMenu::Release(void)
 {
-	pPrefabCreate = shNULL;
-	pPrefabFind = shNULL;
-	m_blockTest = shNULL;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -57,17 +51,6 @@
 	CShIdentifier levelIdentifier("octa_level_main_menu");
 	bool resLoad = ShLevel::Load(levelIdentifier);
 	SH_ASSERT(resLoad);
-
-	pPrefabCreate = ShPrefab::Create(levelIdentifier, CShIdentifier("ntm"), CShIdentifier("bloc_pierre"), CShIdentifier("layer_default"), CShVector3(0.0f, 0.0f, 1.0f), CShEulerAngles(), CShVector3(1.0f, 1.0f, 1.0f));
-	SH_ASSERT(shNULL != pPrefabCreate);
-
-	m_blockTest = new Block();
-	m_blockTest->Initialize(pPrefabCreate);
-
-	/*pPrefabFind = ShPrefab::Find(levelIdentifier, CShIdentifier("prefab_bloc_pierre_001"));
-	SH_ASSERT(shNULL != pPrefabFind);*/
-
-	FieldManager fm(CShVector2(10, 10));
 
 	m_eState = e_state_enter;
 }
@@ -96,7 +79,6 @@
 
 		case e_state_playing:
 		{
-			m_blockTest->Update();
 		}break;
 		
 		case e_state_end:
