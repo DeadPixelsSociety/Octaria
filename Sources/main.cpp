@@ -56,14 +56,14 @@ void ShEntryPoint::OnPostInitialize(void)
 {
 	//
 	// Create camera
-	ShCamera * pCamera = ShCamera::Create(GID(global), GID(camera), false);
+	ShCamera * pCamera = ShCamera::Create(GID(global), GID(camera_free), false);
 	SH_ASSERT(shNULL != pCamera);
 
-	ShCamera::SetPosition(pCamera, CShVector3(0.0f, 0.0f, 1000.0f));
+	ShCamera::SetCurrent2D(pCamera);
+	ShCamera::SetPosition(pCamera, CShVector3(0.0f, 0.0f, 2000.0f));
 	ShCamera::SetTarget(pCamera, CShVector3(0.0f, 0.0f, 0.0f));
 	ShCamera::SetUp(pCamera, CShVector3(0.0f, 1.0f, 0.0f));
-	ShCamera::SetProjectionOrtho(pCamera);
-	ShCamera::SetNearPlaneDistance(pCamera, -2000.0f);
+	ShCamera::SetNearPlaneDistance(pCamera, 1.0f);
 	ShCamera::SetFarPlaneDistance(pCamera, 10000.0f);
 
 	int displayWidth = ShDisplay::GetWidth(); // 1280
