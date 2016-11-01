@@ -67,27 +67,28 @@ void FieldManager::GenerateMap(void)
 			// fill all column blocks
 			if (y < stone) 
 			{
-				m_csMap[x][y].value = 175;
-
-				//int val = m_pGenerator->Noise(x, y, 1, 14);
+				m_csMap[x][y].value = 3;
+			
+				int val;
+				//val = m_pGenerator->Noise(x, y, 1, 14);
 				//if (10 < val) 
 				//{
-				//	m_csMap[x][y].value = 100;
+				//	m_csMap[x][y].value = 2;
 				//}
-				//
+				
 				//val = m_pGenerator->Noise(x, y * 2, 1, 12);
 				//if (10 < val) 
 				//{
-				//	m_csMap[x][y].value = 250;
+				//	m_csMap[x][y].value = 0;
 				//}
 			}
 			else if (y < dirt) 
 			{
-				m_csMap[x][y].value = 100;
+				m_csMap[x][y].value = 2;
 			}
 			else
 			{
-				m_csMap[x][y].value = 250;
+				m_csMap[x][y].value = 0;
 			}
 		}
 	}
@@ -117,27 +118,7 @@ void FieldManager::GetFieldBlockType(CShArray<EBlocValue> & aFieldValues)
 		for (int y = 0; y < m_csMapSize.m_y; ++y)
 		{
 			int idBloc = m_csMap[x][y].value;
-
-			if (idBloc >= 0 && idBloc < 80)
-			{
-				aFieldValues.Add(e_bloc_herbe);
-			}
-			else if (idBloc >= 80 && idBloc < 150)
-			{
-				aFieldValues.Add(e_bloc_terre);
-			}
-			else if (idBloc >= 150 && idBloc < 200)
-			{
-				aFieldValues.Add(e_bloc_pierre);
-			}
-			//else if (idBloc >= 100 && idBloc < 130)
-			//{
-			//	aFieldValues.Add(e_bloc_charbon);
-			//}
-			else
-			{
-				aFieldValues.Add(e_bloc_vide);
-			}
+			aFieldValues.Add((EBlocValue)idBloc);
 		}
 	}
 }

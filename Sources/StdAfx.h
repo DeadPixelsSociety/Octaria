@@ -22,10 +22,10 @@
 enum EBlocValue
 {
 	e_bloc_vide,		//<	default
-	e_bloc_pierre,		//<	20-50
-	e_bloc_herbe,		//<	50-70
-	e_bloc_terre,		//<	70-100
-	e_bloc_charbon,		//<	100-130
+	e_bloc_herbe,		//<
+	e_bloc_terre,		//<
+	e_bloc_pierre,		//<	
+	e_bloc_charbon,		//<
 
 	e_bloc_max
 };
@@ -33,9 +33,9 @@ enum EBlocValue
 static const char * g_aPrefabName[e_bloc_max] =
 {
 	"bloc_vide",		//< not used, void bloc
-	"bloc_pierre",		//< 
 	"bloc_herbe",		//< 
 	"bloc_terre",		//<
+	"bloc_pierre",		//< 
 	"bloc_charbon",		//<
 };
 

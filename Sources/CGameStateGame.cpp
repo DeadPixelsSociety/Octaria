@@ -16,7 +16,6 @@
 , m_eState(e_state_enter)
 , m_aPoulpeList()
 , m_aBlockList()
-
 {
 
 }
