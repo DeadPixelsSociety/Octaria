@@ -57,8 +57,6 @@
 
 	//
 	// Field generation
-	//int nbBlocX = 45;
-	//int nbBlocY = 24;
 	int nbBlocX = 90;
 	int nbBlocY = 48;
 	int nBlockCount = nbBlocX * nbBlocY;
@@ -78,14 +76,20 @@
 	// add grass layer
 	for (int x = 0; x < nbBlocX; ++x)
 	{
-		for (int y = 0; y < nbBlocY-1; ++y)
+		for (int y = nbBlocY - 1; 0 < y; --y)
 		{
-			if (e_bloc_vide == aFieldBlockType[(x*nbBlocY) + y])
+			if (e_bloc_vide != aFieldBlockType[(x*nbBlocY) + y])
 			{
-				aFieldBlockType[(x*nbBlocY) + y] = e_bloc_herbe;
+				int lastCase = (x*nbBlocY) + y + 1;
+				if (nbBlocY - 1 == y)
+				{
+					--lastCase;
+				}
+
+				aFieldBlockType[lastCase] = e_bloc_herbe;
+
 				break;
 			}
-			int tesbreak = 0;
 		}
 	}
 

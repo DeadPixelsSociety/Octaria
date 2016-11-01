@@ -50,14 +50,14 @@ void FieldManager::GenerateMap(void)
 
 	for (int x = 0; x < width; ++x)
 	{
-		// generate rock curve
-		int stone = m_pGenerator->Noise(x, 0, 1, 10);
+		// generate stone curve
+		int stone = m_pGenerator->Noise(x, 0, 1, 25);
 		stone +=	m_pGenerator->Noise(x, 0, 1, 20);
-		stone +=	m_pGenerator->Noise(x, 0, 1, 5);
+		//stone +=	m_pGenerator->Noise(x, 0, 1, 15);
 
 		// generate dirt curve
-		int dirt =	m_pGenerator->Noise(x, 0, 1, 22);
-		dirt +=		m_pGenerator->Noise(x, 0, 1, 18);
+		int dirt =	m_pGenerator->Noise(x, 0, 1, 28);
+		dirt +=		m_pGenerator->Noise(x, 0, 1, 25);
 
 		for (int y = 0; y < height; ++y)
 		{
@@ -68,6 +68,18 @@ void FieldManager::GenerateMap(void)
 			if (y < stone) 
 			{
 				m_csMap[x][y].value = 175;
+
+				//int val = m_pGenerator->Noise(x, y, 1, 14);
+				//if (10 < val) 
+				//{
+				//	m_csMap[x][y].value = 100;
+				//}
+				//
+				//val = m_pGenerator->Noise(x, y * 2, 1, 12);
+				//if (10 < val) 
+				//{
+				//	m_csMap[x][y].value = 250;
+				//}
 			}
 			else if (y < dirt) 
 			{
