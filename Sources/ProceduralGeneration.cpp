@@ -12,43 +12,91 @@
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-ProceduralGeneration::ProceduralGeneration(int l, int h, int p, int n) 
-: m_taille(0)
-, m_nombre_octaves2D(n)
-, m_longueur(l)
-, m_hauteur(h)
-, m_pas2D(p)
+/*explicit*/ ProceduralGeneration::ProceduralGeneration(int width, int height, int step, int octave)
+: m_octave(octave)
+, m_width(width)
+, m_height(height)
+, m_step(step)
+, m_maxWitdh(0)
+, m_valeurs(shNULL)
+, m_is1D(false)
 {
-	if (m_taille != 0)
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+void ProceduralGeneration::Initialize(bool is1D /*= false*/)
+{
+	if (shNULL != m_valeurs)
 	{
-		SH_SAFE_FREE(m_valeurs2D);
+		SH_SAFE_FREE(m_valeurs);
 	}
 
-    m_longueur_max =  (int) ceil(m_longueur * pow(2, m_nombre_octaves2D  - 1)  / m_pas2D);
-    int hauteur_max = (int) ceil(m_hauteur * pow(2, m_nombre_octaves2D  - 1)  / m_pas2D);
+	m_is1D = is1D;
 
-    m_valeurs2D = (double*) malloc(sizeof(double) * m_longueur_max * hauteur_max);
-
-    srand(time(shNULL));
-
-	int nVal = m_longueur_max * hauteur_max;
-	for (int i = 0; i < nVal; ++i)
+	if (!is1D)
 	{
-		m_valeurs2D[i] = ((double)rand()) / RAND_MAX;
+		m_maxWitdh = (int)ceil(m_width * pow(2, m_octave - 1) / m_step);
+		int height_max = (int)ceil(m_height * pow(2, m_octave - 1) / m_step);
+
+		m_valeurs = (double*)malloc(sizeof(double) * m_maxWitdh * height_max);
+
+		srand(time(shNULL));
+
+		int nVal = m_maxWitdh * height_max;
+		for (int i = 0; i < nVal; ++i)
+		{
+			m_valeurs[i] = ((double)rand()) / RAND_MAX;
+		}
+	}
+	else
+	{
+		m_valeurs = (double*)malloc(sizeof(double) * (int)ceil(m_width * pow(2, m_octave - 1) / m_step));
+
+		srand(time(NULL));
+		int nCount = ceil(m_width * pow(2, m_octave - 1) / m_step);
+		for (int i = 0; i < nCount; i++)
+		{
+			m_valeurs[i] = (double)rand() / RAND_MAX;
+		}
 	}
 }
 
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void ProceduralGeneration::destroyBruit2D() 
+void ProceduralGeneration::Release()
 {
-	if (m_longueur != 0)
+	if (shNULL != m_valeurs)
 	{
-		free(m_valeurs2D);
+		SH_SAFE_FREE(m_valeurs);
 	}
 
-    m_longueur = 0;
+    m_width = 0;
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+int ProceduralGeneration::Noise(int x, int y, int scale, int magnitude)
+{
+	double res = 0.0f;
+	
+	if (m_is1D)
+	{
+		res = fonction_bruit1D(x*scale);
+	}
+	else
+	{ 
+		res = fonction_bruit2D(x*scale, y*scale);
+	}
+
+	return((int)(res * magnitude));
+
+	/*
+	Note: Scale seems to broken all if != 1
+	*/
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -56,7 +104,7 @@ void ProceduralGeneration::destroyBruit2D()
 //--------------------------------------------------------------------------------------------------
 double ProceduralGeneration::bruit2D(int i, int j) 
 {
-    return(m_valeurs2D[i * m_longueur_max + j]);
+    return(m_valeurs[i * m_maxWitdh + j]);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -85,13 +133,14 @@ double ProceduralGeneration::interpolation_cos2D(double a, double b, double c, d
 //--------------------------------------------------------------------------------------------------
 double ProceduralGeneration::fonction_bruit2D(double x, double y) 
 {
-   int i = (int) (x / m_pas2D);
-   int j = (int) (y / m_pas2D);
+   int i = (int) (x / m_step);
+   int j = (int) (y / m_step);
 
-   double res = interpolation_cos2D(bruit2D(i, j), bruit2D(i + 1, j), bruit2D(i, j + 1), bruit2D(i + 1, j + 1), fmod(x / m_pas2D, 1), fmod(y / m_pas2D, 1));
+   double res = interpolation_cos2D(bruit2D(i, j), bruit2D(i + 1, j), bruit2D(i, j + 1), bruit2D(i + 1, j + 1), fmod(x / m_step, 1), fmod(y / m_step, 1));
 
    return(res);
 }
+
 
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
@@ -102,7 +151,7 @@ double ProceduralGeneration::bruit_coherent2D(double x, double y, double persist
     double p = 1;
     int f = 1;
 
-    for(int i = 0; i < m_nombre_octaves2D; ++i) 
+    for(int i = 0; i < m_octave; ++i) 
 	{
         somme += p * fonction_bruit2D(x * f, y * f);
         p *= persistance;
@@ -110,4 +159,16 @@ double ProceduralGeneration::bruit_coherent2D(double x, double y, double persist
     }
 
     return(somme * (1 - persistance) / (1 - p));
+}
+
+
+double ProceduralGeneration::bruit1D(int i) 
+{
+	return m_valeurs[i];
+}
+
+double ProceduralGeneration::fonction_bruit1D(double x)
+{
+	int i = (int)(x / m_step);
+	return interpolation_cos1D(bruit1D(i), bruit1D(i + 1), fmod(x / m_step, 1));
 }

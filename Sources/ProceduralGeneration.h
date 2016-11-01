@@ -14,30 +14,38 @@ class ProceduralGeneration
 
 public:
 
-	/*
-	l = Width | h = height | p = step | n = octave
-	*/
-	ProceduralGeneration(int l, int h, int p, int n);
+	explicit		ProceduralGeneration	(int width, int height, int step, int octave);
 
-	void destroyBruit2D();
-	double bruit2D(int i, int j);
-	double interpolation_cos1D(double a, double b, double x);
-	double interpolation_cos2D(double a, double b, double c, double d, double x, double y);
-	double fonction_bruit2D(double x, double y);
-	double bruit_coherent2D(double x, double y, double persistance);
+	void			Initialize				(bool is1D = false);
+	void			Release					(void);
+
+	int				Noise					(int x, int y, int scale, int magnitude);
+
+	double			fonction_bruit2D		(double x, double y);
+	double			fonction_bruit1D		(double x);
+
+private: 
+
+	double			bruit2D					(int i, int j);
+	double			interpolation_cos2D		(double a, double b, double c, double d, double x, double y);
 
 
- private:
+	double			bruit1D					(int i);
+	double			interpolation_cos1D		(double a, double b, double x);
 
-    int				m_taille;
-    int				m_pas2D;
-    int				m_nombre_octaves2D;
-    int				m_hauteur;
-    int				m_longueur;
-    int				m_longueur_max;
-    double*			m_valeurs2D;
 
- 
+	double			bruit_coherent2D(double x, double y, double persistance);
+
+private:
+
+    int				m_step;
+	int				m_octave;
+    int				m_height;
+    int				m_width;
+    int				m_maxWitdh;
+    double *		m_valeurs;
+	bool			m_is1D;
+
 };
 
 #endif

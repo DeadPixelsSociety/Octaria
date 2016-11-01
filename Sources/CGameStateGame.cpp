@@ -57,8 +57,10 @@
 
 	//
 	// Field generation
-	int nbBlocX = 45;
-	int nbBlocY = 24;
+	//int nbBlocX = 45;
+	//int nbBlocY = 24;
+	int nbBlocX = 90;
+	int nbBlocY = 48;
 	int nBlockCount = nbBlocX * nbBlocY;
 	float blocWidth  = 64.0f;	// hardcoded value, getting from sprite
 	float blocHeight = 64.0f;	// ^	
@@ -97,7 +99,8 @@
 		if (e_bloc_vide != aFieldBlockType[i])
 		{
 			float currentX, currentY;
-
+			int testX = aFieldCoord[i].m_x;
+			int testY = aFieldCoord[i].m_y;
 			currentX = coordX + (blocWidth * aFieldCoord[i].m_x);
 			currentY = coordY + (blocHeight * aFieldCoord[i].m_y);
 			ShPrefab * pPrefab = ShPrefab::Create(levelIdentifier, CShIdentifier("ntm"), CShIdentifier(g_aPrefabName[aFieldBlockType[i]]), CShIdentifier("layer_default"), CShVector3(currentX, currentY, 1.0f), CShEulerAngles(), CShVector3(1.0f, 1.0f, 1.0f));

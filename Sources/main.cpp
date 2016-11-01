@@ -60,7 +60,7 @@ void ShEntryPoint::OnPostInitialize(void)
 	SH_ASSERT(shNULL != pCamera);
 
 	ShCamera::SetCurrent2D(pCamera);
-	ShCamera::SetPosition(pCamera, CShVector3(0.0f, 0.0f, 2000.0f));
+	ShCamera::SetPosition(pCamera, CShVector3(0.0f, 0.0f, 4000.0f));
 	ShCamera::SetTarget(pCamera, CShVector3(0.0f, 0.0f, 0.0f));
 	ShCamera::SetUp(pCamera, CShVector3(0.0f, 1.0f, 0.0f));
 	ShCamera::SetNearPlaneDistance(pCamera, 1.0f);

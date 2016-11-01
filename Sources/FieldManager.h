@@ -32,12 +32,12 @@ public:
 	FieldManager	(const CShVector2 & size);
 	~FieldManager	();
 
-	void						GetFieldBlockType	(CShArray<EBlocValue> & aFieldValues);
-	void						GetFieldCoord		(CShArray<CShVector2> & aFieldCoord);
+	void						GetFieldBlockType		(CShArray<EBlocValue> & aFieldValues);
+	void						GetFieldCoord			(CShArray<CShVector2> & aFieldCoord);
 
 private:
 
-	void						GenerateMap		(void);	// Genere procéduralement la map 
+	void						GenerateMap				(void);	// Genere procéduralement la map 
 
 private:
 
@@ -47,6 +47,8 @@ private:
 
 	int							m_iStep;			// Parametre "pas" de la generation procedurale
 	int							m_iOctave;			// Parametre "octave" de la generation procédurale
+
+	int							m_magnitude;		// Magnitude à appliquer pour passer de l'intervalle [0-1] à des valeurs utilisables plus simplement
 
 };
 
