@@ -44,8 +44,8 @@ void ProceduralGeneration::Initialize(bool is1D /*= false*/)
 
 		srand(time(shNULL));
 
-		int nVal = m_maxWitdh * height_max;
-		for (int i = 0; i < nVal; ++i)
+		int nCount = m_maxWitdh * height_max;
+		for (int i = 0; i < nCount; ++i)
 		{
 			m_valeurs[i] = ((double)rand()) / RAND_MAX;
 		}
@@ -141,9 +141,8 @@ double ProceduralGeneration::fonction_bruit2D(double x, double y)
    return(res);
 }
 
-
 //--------------------------------------------------------------------------------------------------
-/// @todo comment
+/// useless
 //--------------------------------------------------------------------------------------------------
 double ProceduralGeneration::bruit_coherent2D(double x, double y, double persistance) 
 {
@@ -151,7 +150,7 @@ double ProceduralGeneration::bruit_coherent2D(double x, double y, double persist
     double p = 1;
     int f = 1;
 
-    for(int i = 0; i < m_octave; ++i) 
+    for (int i = 0; i < m_octave; ++i) 
 	{
         somme += p * fonction_bruit2D(x * f, y * f);
         p *= persistance;
@@ -161,12 +160,17 @@ double ProceduralGeneration::bruit_coherent2D(double x, double y, double persist
     return(somme * (1 - persistance) / (1 - p));
 }
 
-
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
 double ProceduralGeneration::bruit1D(int i) 
 {
 	return m_valeurs[i];
 }
 
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
 double ProceduralGeneration::fonction_bruit1D(double x)
 {
 	int i = (int)(x / m_step);

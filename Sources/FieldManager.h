@@ -16,15 +16,6 @@ typedef struct
 
 #include "ProceduralGeneration.h"
 
-/*
-	20-50	: Pierre
-	50-70	: Herbe
-	70-100	: Terre
-	100-130	: Charbon
-
-	Reste	: Vide
-*/
-
 class FieldManager
 {
 public:

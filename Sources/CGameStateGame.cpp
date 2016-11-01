@@ -75,6 +75,20 @@
 	fieldManager.GetFieldCoord(aFieldCoord);
 	SH_ASSERT(nBlockCount == aFieldCoord.GetCount());
 
+	// add grass layer
+	for (int x = 0; x < nbBlocX; ++x)
+	{
+		for (int y = 0; y < nbBlocY-1; ++y)
+		{
+			if (e_bloc_vide == aFieldBlockType[(x*nbBlocY) + y])
+			{
+				aFieldBlockType[(x*nbBlocY) + y] = e_bloc_herbe;
+				break;
+			}
+			int tesbreak = 0;
+		}
+	}
+
 	//
 	// Get n°0 bloc coord
 	float coordX = 0.0f;
@@ -99,8 +113,6 @@
 		if (e_bloc_vide != aFieldBlockType[i])
 		{
 			float currentX, currentY;
-			int testX = aFieldCoord[i].m_x;
-			int testY = aFieldCoord[i].m_y;
 			currentX = coordX + (blocWidth * aFieldCoord[i].m_x);
 			currentY = coordY + (blocHeight * aFieldCoord[i].m_y);
 			ShPrefab * pPrefab = ShPrefab::Create(levelIdentifier, CShIdentifier("ntm"), CShIdentifier(g_aPrefabName[aFieldBlockType[i]]), CShIdentifier("layer_default"), CShVector3(currentX, currentY, 1.0f), CShEulerAngles(), CShVector3(1.0f, 1.0f, 1.0f));

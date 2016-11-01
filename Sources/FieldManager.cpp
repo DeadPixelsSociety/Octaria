@@ -45,10 +45,10 @@ FieldManager::~FieldManager()
 //--------------------------------------------------------------------------------------------------
 void FieldManager::GenerateMap(void)
 {
-	int height = m_csMapSize.m_x;
-	int width = m_csMapSize.m_y;
+	int width = m_csMapSize.m_x;
+	int height = m_csMapSize.m_y;
 
-	for (int x = 0; x < height; ++x)
+	for (int x = 0; x < width; ++x)
 	{
 		// generate rock curve
 		int stone = m_pGenerator->Noise(x, 0, 1, 10);
@@ -59,7 +59,7 @@ void FieldManager::GenerateMap(void)
 		int dirt =	m_pGenerator->Noise(x, 0, 1, 22);
 		dirt +=		m_pGenerator->Noise(x, 0, 1, 18);
 
-		for (int y = 0; y < width; ++y)
+		for (int y = 0; y < height; ++y)
 		{
 			m_csMap[x][y].x = x;
 			m_csMap[x][y].y = y;

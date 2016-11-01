@@ -21,10 +21,10 @@ public:
 
 	int				Noise					(int x, int y, int scale, int magnitude);
 
+private: 
+
 	double			fonction_bruit2D		(double x, double y);
 	double			fonction_bruit1D		(double x);
-
-private: 
 
 	double			bruit2D					(int i, int j);
 	double			interpolation_cos2D		(double a, double b, double c, double d, double x, double y);
@@ -34,7 +34,7 @@ private:
 	double			interpolation_cos1D		(double a, double b, double x);
 
 
-	double			bruit_coherent2D(double x, double y, double persistance);
+	double			bruit_coherent2D		(double x, double y, double persistance);
 
 private:
 
