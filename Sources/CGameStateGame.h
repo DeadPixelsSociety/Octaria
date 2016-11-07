@@ -47,7 +47,7 @@ public:
 protected:
 
 private:
-
+	void					PlayerMining		(void);
 
 public:
 
@@ -59,6 +59,9 @@ private:
 	CShArray<Block *>			m_aBlockList;
 
 	CShArray<CGamePoulpe *>		m_aPoulpeList;
+	CGamePoulpe *				m_pCurrentPoulpe;
+
+	int							m_mouseClic;
 
 };
 

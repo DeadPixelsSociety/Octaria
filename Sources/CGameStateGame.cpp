@@ -16,6 +16,8 @@
 , m_eState(e_state_enter)
 , m_aPoulpeList()
 , m_aBlockList()
+, m_pCurrentPoulpe(shNULL)
+, m_mouseClic(0)
 {
 
 }
@@ -75,7 +77,7 @@
 	// add grass layer
 	for (int x = 0; x < nbBlocX; ++x)
 	{
-		for (int y = nbBlocY - 1; 0 < y; --y)
+		for (int y = nbBlocY - 1; 0 <= y; --y)
 		{
 			if (e_bloc_vide != aFieldBlockType[(x*nbBlocY) + y])
 			{
@@ -122,7 +124,7 @@
 			SH_ASSERT(shNULL != pPrefab);
 
 			Block * pBlock = new Block();
-			pBlock->Initialize(pPrefab);
+			pBlock->Initialize(pPrefab, aFieldBlockType[i]);
 
 			m_aBlockList.Add(pBlock);
 		}
@@ -138,6 +140,8 @@
 	pPoulpe->Initialize(levelIdentifier);
 	m_aPoulpeList.Add(pPoulpe);
 
+	m_pCurrentPoulpe = m_aPoulpeList[0];
+
 	m_eState = e_state_enter;
 }
 
@@ -146,6 +150,8 @@
 //--------------------------------------------------------------------------------------------------
 /*virtual*/ void CGameStateGame::DeActivate(void)
 {
+	m_pCurrentPoulpe = shNULL;
+
 	int nPoulpeCount = m_aPoulpeList.GetCount();
 	for (int iPoulpe = 0; iPoulpe < nPoulpeCount; ++iPoulpe)
 	{
@@ -153,6 +159,14 @@
 		SH_SAFE_DELETE(m_aPoulpeList[iPoulpe]);
 	}
 	m_aPoulpeList.Empty();
+
+	int nBlockCount = m_aBlockList.GetCount();
+	for (int iBlock = 0; iBlock < nPoulpeCount; ++iBlock)
+	{
+		m_aBlockList[iBlock]->Release();
+		SH_SAFE_DELETE(m_aPoulpeList[iBlock]);
+	}
+	m_aBlockList.Empty();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -175,11 +189,14 @@
 
 			bool isLeft		= g_pInputPlayer->IsLeftPressed();
 			bool isRight	= g_pInputPlayer->IsRightPressed();
+			bool isDown		= g_pInputPlayer->IsDownPressed();
+			bool isUp		= g_pInputPlayer->IsUpPressed();
 
-			int nPoulpeCount = m_aPoulpeList.GetCount();
-			for (int iPoulpe = 0; iPoulpe < nPoulpeCount; ++iPoulpe)
+			m_pCurrentPoulpe->Update(isLeft, isRight, isDown, isUp);
+			
+			if (m_mouseClic)
 			{
-				m_aPoulpeList[iPoulpe]->Update(isLeft, isRight);
+				PlayerMining();
 			}
 
 		}break;
@@ -196,9 +213,66 @@
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
+void CGameStateGame::PlayerMining(void)
+{
+	CShVector2 posPlayer = m_pCurrentPoulpe->GetPosition();
+	EPoulpeLook dirLook = m_pCurrentPoulpe->GetLook();
+
+	CShVector2 posRay(posPlayer);
+
+	switch (dirLook)
+	{
+	case e_look_right:
+	{
+		posRay.m_x += 32.0f;
+	}break;
+
+	case e_look_left:
+	{
+		posRay.m_x -= 32.0f;
+	}break;
+
+	case e_look_up:
+	{
+		posRay.m_y += 32.0f;
+	}break;
+
+	case e_look_down:
+	{
+		posRay.m_y -= 32.0f;
+	}break;
+	}
+
+	int nBlockCount = m_aBlockList.GetCount();
+	for (int iBlock = 0; iBlock < nBlockCount; ++iBlock)
+	{
+		Block * pBlock = m_aBlockList[iBlock];
+		// Avoid void bloc
+		if (shNULL != pBlock)
+		{
+			CShVector2 posBlock = pBlock->GetPosition();
+			if (32.0f >= computeVecteurNorme(posBlock.m_x, posBlock.m_y, posRay.m_x, posRay.m_y))
+			{
+				if (e_bloc_vide != pBlock->GetType())
+				{
+					if (pBlock->HitByPlayer())
+					{
+						// TODO - Add resource in player inventory
+
+						ShEntity2::SetShow(m_aBlockList[iBlock]->GetEntity(), false);
+						m_aBlockList[iBlock] = shNULL;
+					}
+				}
+			}
+		}
+	}
+}
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
 /*virtual*/ void CGameStateGame::OnTouchDown(int iTouch, float positionX, float positionY)
 {
-
+	m_mouseClic = 1;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -206,7 +280,7 @@
 //--------------------------------------------------------------------------------------------------
 /*virtual*/ void CGameStateGame::OnTouchUp(int iTouch, float positionX, float positionY)
 {
-
+	m_mouseClic = 0;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -214,5 +288,5 @@
 //--------------------------------------------------------------------------------------------------
 /*virtual*/ void CGameStateGame::OnTouchMove(int iTouch, float positionX, float positionY)
 {
-
+	m_pCurrentPoulpe->SetLook(positionX, positionY);
 }
