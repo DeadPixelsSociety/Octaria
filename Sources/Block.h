@@ -17,15 +17,19 @@ public:
 	virtual		~Block	(void);
 
 
-	void				Initialize		(ShPrefab * pPrefab);
+	void				Initialize		(ShPrefab * pPrefab, EBlocValue blocType);
 	void				Release			(void);
 
-	void				SetPosition		(const CShVector2 & position);
+	bool				HitByPlayer		(void);
 
 	const CShVector2 &	GetPosition		(void);
 
 	float				GetWidth		(void);
 	float				GetHeight		(void);
+
+	ShEntity2 *			GetEntity		(void);
+
+	EBlocValue			GetType			(void);
 
 private:
 
@@ -37,11 +41,14 @@ private:
 	CShVector2				m_v2Position;
 	CShVector2				m_v2AbstractPosition;
 	CShVector2				m_v2Size;
-	bool					m_bShow;
 
 	//Valeur dans lesquels le block est genéré
 	int						m_iStartV;
 	int						m_iEndV;
+
+	EBlocValue				m_eBlocType;
+
+	int						m_blockLife;
 
 };
 

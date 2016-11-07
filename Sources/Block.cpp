@@ -14,7 +14,6 @@
 Block::Block(void)
 : m_pBlockPref(shNULL)
 , m_pBlockEntity(shNULL)
-, m_bShow(false)
 , m_iStartV(0)
 , m_iEndV(0)
 , m_v2Position()
@@ -33,16 +32,7 @@ Block::~Block(void)
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void Block::Release(void)
-{
-	m_pBlockPref = shNULL;
-	m_pBlockEntity = shNULL;
-}
-
-//--------------------------------------------------------------------------------------------------
-/// @todo comment
-//--------------------------------------------------------------------------------------------------
-void Block::Initialize(ShPrefab * pPrefab)
+void Block::Initialize(ShPrefab * pPrefab, EBlocValue blocType)
 {
 	m_pBlockPref = pPrefab;
 	CShArray<ShObject *> aPrefabElm;
@@ -55,6 +45,7 @@ void Block::Initialize(ShPrefab * pPrefab)
 		if (ShObject::GetType(aPrefabElm[i]) == ShObject::e_type_entity2)
 		{
 			m_pBlockEntity = (ShEntity2 *)aPrefabElm[i];
+			m_v2Position = ShEntity2::GetWorldPosition2(m_pBlockEntity);
 
 			//Parsing du dataset
 			int dataSetCount = ShObject::GetDataSetCount(m_pBlockEntity);
@@ -94,14 +85,37 @@ void Block::Initialize(ShPrefab * pPrefab)
 			}
 		}
 	}
+
+	m_eBlocType = blocType;
+	switch (m_eBlocType)
+	{
+		case e_bloc_herbe: m_blockLife = 3; break;
+		case e_bloc_terre: m_blockLife = 5; break;
+		case e_bloc_pierre: m_blockLife = 10; break;
+		case e_bloc_charbon: m_blockLife = 12; break;
+		default: m_blockLife = 0;
+	}
 }
 
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void Block::SetPosition(const CShVector2 & position)
+void Block::Release(void)
 {
-	m_v2Position = position;
+	m_pBlockPref = shNULL;
+	m_pBlockEntity = shNULL;
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+bool Block::HitByPlayer(void)
+{
+	--m_blockLife;
+
+	// set sprite depend to life
+
+	return(!m_blockLife);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -117,7 +131,7 @@ const CShVector2 & Block::GetPosition()
 //--------------------------------------------------------------------------------------------------
 float Block::GetWidth(void)
 {
-	return ShEntity2::GetWidth(m_pBlockEntity);
+	return(ShEntity2::GetWidth(m_pBlockEntity));
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -125,5 +139,21 @@ float Block::GetWidth(void)
 //--------------------------------------------------------------------------------------------------
 float Block::GetHeight(void)
 {
-	return ShEntity2::GetHeight(m_pBlockEntity);
+	return(ShEntity2::GetHeight(m_pBlockEntity));
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+ShEntity2 * Block::GetEntity(void)
+{
+	return(m_pBlockEntity);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+EBlocValue Block::GetType(void)
+{
+	return(m_eBlocType);
 }
