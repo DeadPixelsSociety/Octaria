@@ -14,7 +14,7 @@
 FieldManager::FieldManager(const CShVector2 & size)
 : m_csMapSize(size)
 , m_magnitude(255)
-, m_iStep(10)
+, m_iStep(8)
 , m_iOctave(10)
 {
 	m_pGenerator = new ProceduralGeneration(m_csMapSize.m_x + 1, m_csMapSize.m_y + 1, m_iStep, m_iOctave);
@@ -53,11 +53,12 @@ void FieldManager::GenerateMap(void)
 		// generate stone curve
 		int stone = m_pGenerator->Noise(x, 0, 1, 25);
 		stone +=	m_pGenerator->Noise(x, 0, 1, 20);
-		//stone +=	m_pGenerator->Noise(x, 0, 1, 15);
+		stone +=	5;
 
 		// generate dirt curve
 		int dirt =	m_pGenerator->Noise(x, 0, 1, 28);
 		dirt +=		m_pGenerator->Noise(x, 0, 1, 25);
+		dirt +=		5;
 
 		for (int y = 0; y < height; ++y)
 		{
@@ -69,7 +70,7 @@ void FieldManager::GenerateMap(void)
 			{
 				m_csMap[x][y].value = 3;
 			
-				int val;
+				//int val;
 				//val = m_pGenerator->Noise(x, y, 1, 14);
 				//if (10 < val) 
 				//{
