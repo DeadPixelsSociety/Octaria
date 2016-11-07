@@ -14,7 +14,7 @@ class CGamePoulpe
 {
 
 public:
-
+	
 	enum EPoulpeState
 	{
 		e_state_init,		
@@ -23,19 +23,25 @@ public:
 		e_state_dead,
 	};
 
-	explicit		CGamePoulpe		(void);
-	virtual			~CGamePoulpe	(void);
+	explicit			CGamePoulpe			(void);
+	virtual				~CGamePoulpe		(void);
 
-	void			Initialize		(CShIdentifier levelIdentifier);
-	void			Release			(void);
+	void				Initialize			(CShIdentifier levelIdentifier);
+	void				Release				(void);
 
-	void			Update			(bool isLeft, bool isRight);
+	void				Update				(bool isLeft, bool isRight, bool isDown, bool isUp);
+
+	void				SetLook				(float cursorX, float cursorY);
+
+	const CShVector2 	GetPosition			() const;
+
+	const EPoulpeLook & GetLook				() const;
 
 protected:
 
 private:
 
-	void			UpdateFromInputs(bool isLeft, bool isRight);
+	void				UpdateFromInputs	(bool isLeft, bool isRight, bool isDown, bool isUp);
 
 public:
 
@@ -44,6 +50,8 @@ protected:
 private:
 
 	EPoulpeState			m_eState;
+
+	EPoulpeLook				m_look;
 
 	CShArray<ShEntity2 *>	m_aPoulpeAnimation[2];	// Walk animation sprite array, left and right
 	int						m_direction;			// 0: left, 1: right	

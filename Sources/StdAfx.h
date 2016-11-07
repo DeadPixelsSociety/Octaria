@@ -32,11 +32,21 @@ enum EBlocValue
 
 static const char * g_aPrefabName[e_bloc_max] =
 {
-	"bloc_vide",		//< not used, void bloc
+	"bloc_vide",		//< void bloc
 	"bloc_herbe",		//< 
 	"bloc_terre",		//<
 	"bloc_pierre",		//< 
 	"bloc_charbon",		//<
+};
+
+enum EPoulpeLook
+{
+	e_look_right,
+	e_look_left,
+	e_look_up,
+	e_look_down,
+
+	e_direction_max
 };
 
 //

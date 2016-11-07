@@ -13,9 +13,9 @@
 //--------------------------------------------------------------------------------------------------
 /*explicit*/ CGamePoulpe::CGamePoulpe(void)
 : m_eState(e_state_init)
-, m_direction(0)
 , m_currentId(0)
 , m_tempoAnim(0)
+, m_direction(0)
 {
 }
 
@@ -55,7 +55,7 @@ void CGamePoulpe::Initialize(CShIdentifier levelIdentifier)
 	{
 		sprintf(spriteName, "sprite_octaria_poulpe_left_%d", i);
 		sprintf(spriteIdent, "poulpe_left_%d", i);
-		ShEntity2 * pEntity = ShEntity2::Create(levelIdentifier, CShIdentifier(spriteName), CShIdentifier("layer_default"), CShIdentifier("octaria"), CShIdentifier(spriteIdent), CShVector3(0.0f, 0.0f, 4.0f), CShEulerAngles(), CShVector3(1.0f, 1.0f, 1.0f), false);
+		ShEntity2 * pEntity = ShEntity2::Create(levelIdentifier, CShIdentifier(spriteName), CShIdentifier("layer_default"), CShIdentifier("octaria"), CShIdentifier(spriteIdent), CShVector3(0.0f, 0.0f, 4.0f), CShEulerAngles(), CShVector3(0.5f, 0.5f, 1.0f), false);
 		SH_ASSERT(shNULL != pEntity);
 		m_aPoulpeAnimation[0].Add(pEntity);
 	}
@@ -65,7 +65,7 @@ void CGamePoulpe::Initialize(CShIdentifier levelIdentifier)
 	{
 		sprintf(spriteName, "sprite_octaria_poulpe_right_%d", i);
 		sprintf(spriteIdent, "poulpe_right_%d", i);
-		ShEntity2 * pEntity = ShEntity2::Create(levelIdentifier, CShIdentifier(spriteName), CShIdentifier("layer_default"), CShIdentifier("octaria"), CShIdentifier(spriteIdent), CShVector3(0.0f, 0.0f, 4.0f), CShEulerAngles(), CShVector3(1.0f, 1.0f, 1.0f), false);
+		ShEntity2 * pEntity = ShEntity2::Create(levelIdentifier, CShIdentifier(spriteName), CShIdentifier("layer_default"), CShIdentifier("octaria"), CShIdentifier(spriteIdent), CShVector3(0.0f, 0.0f, 4.0f), CShEulerAngles(), CShVector3(0.5f, 0.5f, 1.0f), false);
 		SH_ASSERT(shNULL != pEntity);
 		m_aPoulpeAnimation[1].Add(pEntity);
 	}
@@ -76,7 +76,7 @@ void CGamePoulpe::Initialize(CShIdentifier levelIdentifier)
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void CGamePoulpe::Update(bool isLeft, bool isRight)
+void CGamePoulpe::Update(bool isLeft, bool isRight, bool isDown, bool isUp)
 {
 	switch (m_eState)
 	{
@@ -97,7 +97,7 @@ void CGamePoulpe::Update(bool isLeft, bool isRight)
 
 		case e_state_playing:
 		{
-			UpdateFromInputs(isLeft, isRight);
+			UpdateFromInputs(isLeft, isRight, isDown, isUp);
 		}
 		break;
 
@@ -109,10 +109,65 @@ void CGamePoulpe::Update(bool isLeft, bool isRight)
 	}
 }
 
+
+/*
+  180
+90	  270
+   0
+*/
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void CGamePoulpe::UpdateFromInputs(bool isLeft, bool isRight)
+void CGamePoulpe::SetLook(float cursorX, float cursorY)
+{
+	CShVector2 currentPos = ShEntity2::GetWorldPosition2(m_aPoulpeAnimation[m_direction][m_currentId]);
+	
+	float dirDegree = atan2(cursorX - currentPos.m_x, cursorY - currentPos.m_y) * 180 / SHC_PI;
+	float dirRad = shDeg2Rad(-dirDegree);
+
+	SH_TRACE("degree: %f\n", dirDegree);
+	SH_TRACE("rad: %f\n", dirRad);
+
+	if (45 < dirDegree && 135 >= dirDegree)
+	{
+		m_look = e_look_left;
+	}
+	else if (135 < dirDegree && 225 >= dirDegree)
+	{
+		m_look = e_look_up;
+	}
+	else if (225 < dirDegree && 315 >= dirDegree)
+	{
+		m_look = e_look_right;
+	}
+	else
+	{
+		m_look = e_look_down;
+	}
+
+	//ShEntity2::SetRotation(m_aPoulpeAnimation[m_direction][m_currentId], 0, 0, dirRad);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+const CShVector2 CGamePoulpe::GetPosition() const
+{
+	return(ShEntity2::GetWorldPosition2(m_aPoulpeAnimation[m_direction][m_currentId]));
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+const EPoulpeLook & CGamePoulpe::GetLook() const
+{
+	return(m_look);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+void CGamePoulpe::UpdateFromInputs(bool isLeft, bool isRight, bool isDown, bool isUp)
 {
 	if (m_tempoAnim >= 4)
 	{
