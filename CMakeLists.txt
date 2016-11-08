@@ -72,11 +72,15 @@ source_group("Game\\Menu" FILES ${SOURCES_mainMenu})
 set(SOURCES_poulpe Sources/CGamePoulpe.cpp Sources/CGamePoulpe.h)
 source_group("Game\\Character" FILES ${SOURCES_poulpe})
 
+# Player caracter files
+set(SOURCES_player Sources/CGamePlayer.cpp Sources/CGamePlayer.h)
+source_group("Game\\Player" FILES ${SOURCES_player})
+
 # Generation procedurale
 set(SOURCES_levelgenerator Sources/Block.cpp Sources/Block.h Sources/ProceduralGeneration.cpp Sources/ProceduralGeneration.h Sources/FieldManager.cpp Sources/FieldManager.h)
 source_group("LevelGenerator" FILES ${SOURCES_levelgenerator})
 
-set(SOURCES ${SOURCES_StdAfx} ${SOURCES_main} ${SOURCES_resource} ${SOURCES_gameState} ${SOURCES_stateManager} ${SOURCES_multiResolutionApplication} ${SOURCES_mainMenu} ${SOURCES_input} ${SOURCES_game} ${SOURCES_poulpe} ${SOURCES_levelgenerator})
+set(SOURCES ${SOURCES_StdAfx} ${SOURCES_main} ${SOURCES_resource} ${SOURCES_gameState} ${SOURCES_stateManager} ${SOURCES_multiResolutionApplication} ${SOURCES_mainMenu} ${SOURCES_input} ${SOURCES_game} ${SOURCES_poulpe}  ${SOURCES_player} ${SOURCES_levelgenerator})
 
 #link_directories("../ShineEngine/Shine/Lib")
 

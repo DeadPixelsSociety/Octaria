@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "StdAfx.h"
-
+extern ShCamera * g_pCamera;
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
@@ -109,24 +109,28 @@ void CGamePoulpe::Update(bool isLeft, bool isRight, bool isDown, bool isUp)
 	}
 }
 
-
-/*
-  180
-90	  270
-   0
-*/
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
 void CGamePoulpe::SetLook(float cursorX, float cursorY)
 {
-	CShVector2 currentPos = ShEntity2::GetWorldPosition2(m_aPoulpeAnimation[m_direction][m_currentId]);
-	
-	float dirDegree = atan2(cursorX - currentPos.m_x, cursorY - currentPos.m_y) * 180 / SHC_PI;
+	CShVector3 currentPos3 = ShEntity2::GetWorldPosition(m_aPoulpeAnimation[m_direction][m_currentId]);
+	CShVector2 currentPos2 = ShCamera::Project(g_pCamera, currentPos3);
+	float dirDegree = atan2((cursorX + 640) - currentPos2.m_x, (cursorY - 360) - currentPos2.m_y) * 180 / SHC_PI;
 	float dirRad = shDeg2Rad(-dirDegree);
+
+	CShVector3 pos(1.0f, 0.0f, 0.0f);
+
+
+	CShVector3 onsenfout(cursorX - (currentPos2.m_x - 640), cursorY- (currentPos2.m_y - 360), 0.0f);
+
+	float tg = pos.DotProduct(onsenfout);
+	
+	dirDegree = shRad2Deg(acosf(tg / onsenfout.GetLength()));
 
 	SH_TRACE("degree: %f\n", dirDegree);
 	SH_TRACE("rad: %f\n", dirRad);
+	SH_TRACE("ntm: %f\n", acosf(tg));
 
 	if (45 < dirDegree && 135 >= dirDegree)
 	{

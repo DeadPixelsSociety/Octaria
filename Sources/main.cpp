@@ -15,6 +15,7 @@
 //--------------------------------------------------------------------------------------------------
 CMultiResolutionApplication	g_multiResolutionApplication;
 float						g_rescaleFactor = 1.0f;
+ShCamera * g_pCamera = shNULL;
 
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
@@ -56,15 +57,14 @@ void ShEntryPoint::OnPostInitialize(void)
 {
 	//
 	// Create camera
-	ShCamera * pCamera = ShCamera::Create(GID(global), GID(camera_free), false);
-	SH_ASSERT(shNULL != pCamera);
+	g_pCamera = ShCamera::Create(GID(global), GID(camera_free), false);
+	SH_ASSERT(shNULL != g_pCamera);
 
-	ShCamera::SetCurrent2D(pCamera);
-	ShCamera::SetPosition(pCamera, CShVector3(0.0f, 0.0f, 4000.0f));
-	ShCamera::SetTarget(pCamera, CShVector3(0.0f, 0.0f, 0.0f));
-	ShCamera::SetUp(pCamera, CShVector3(0.0f, 1.0f, 0.0f));
-	ShCamera::SetNearPlaneDistance(pCamera, 1.0f);
-	ShCamera::SetFarPlaneDistance(pCamera, 10000.0f);
+	ShCamera::SetPosition(g_pCamera, CShVector3(0.0f, 0.0f, 4000.0f));
+	ShCamera::SetTarget(g_pCamera, CShVector3(0.0f, 0.0f, 0.0f));
+	ShCamera::SetUp(g_pCamera, CShVector3(0.0f, 1.0f, 0.0f));
+	ShCamera::SetNearPlaneDistance(g_pCamera, 1.0f);
+	ShCamera::SetFarPlaneDistance(g_pCamera, 10000.0f);
 
 	int displayWidth = ShDisplay::GetWidth(); // 1280
 	int displayHeight = ShDisplay::GetHeight(); // 720
@@ -91,9 +91,9 @@ void ShEntryPoint::OnPostInitialize(void)
 		g_rescaleFactor = DISPLAY_WIDTH / displayWidth;
 	}
 
-	ShCamera::SetViewport(pCamera, g_rescaleFactor * displayWidth, g_rescaleFactor * displayHeight);
-	ShCamera::SetCurrent2D(pCamera);
-	g_multiResolutionApplication.SetCamera(pCamera);
+	ShCamera::SetViewport(g_pCamera, g_rescaleFactor * displayWidth, g_rescaleFactor * displayHeight);
+	ShCamera::SetCurrent2D(g_pCamera);
+	g_multiResolutionApplication.SetCamera(g_pCamera);
 
 	//
 	// Initialize multi resolution application

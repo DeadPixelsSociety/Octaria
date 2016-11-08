@@ -18,6 +18,7 @@
 , m_aBlockList()
 , m_pCurrentPoulpe(shNULL)
 , m_mouseClic(0)
+, m_pCurrentPlayer(shNULL)
 {
 
 }
@@ -142,6 +143,11 @@
 
 	m_pCurrentPoulpe = m_aPoulpeList[0];
 
+	//
+	// Player
+	CGamePlayer * pPlayer = new CGamePlayer();
+	m_pCurrentPlayer = pPlayer;
+
 	m_eState = e_state_enter;
 }
 
@@ -167,6 +173,9 @@
 		SH_SAFE_DELETE(m_aPoulpeList[iBlock]);
 	}
 	m_aBlockList.Empty();
+
+	m_pCurrentPlayer->Release();
+	m_pCurrentPlayer = shNULL;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -222,25 +231,25 @@ void CGameStateGame::PlayerMining(void)
 
 	switch (dirLook)
 	{
-	case e_look_right:
-	{
-		posRay.m_x += 32.0f;
-	}break;
+		case e_look_right:
+		{
+			posRay.m_x += 32.0f;
+		}break;
 
-	case e_look_left:
-	{
-		posRay.m_x -= 32.0f;
-	}break;
+		case e_look_left:
+		{
+			posRay.m_x -= 32.0f;
+		}break;
 
-	case e_look_up:
-	{
-		posRay.m_y += 32.0f;
-	}break;
+		case e_look_up:
+		{
+			posRay.m_y += 32.0f;
+		}break;
 
-	case e_look_down:
-	{
-		posRay.m_y -= 32.0f;
-	}break;
+		case e_look_down:
+		{
+			posRay.m_y -= 32.0f;
+		}break;
 	}
 
 	int nBlockCount = m_aBlockList.GetCount();
@@ -257,8 +266,7 @@ void CGameStateGame::PlayerMining(void)
 				{
 					if (pBlock->HitByPlayer())
 					{
-						// TODO - Add resource in player inventory
-
+						m_pCurrentPlayer->AddObjectToIventory(pBlock->GetType());
 						ShEntity2::SetShow(m_aBlockList[iBlock]->GetEntity(), false);
 						m_aBlockList[iBlock] = shNULL;
 					}
@@ -267,6 +275,7 @@ void CGameStateGame::PlayerMining(void)
 		}
 	}
 }
+
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------

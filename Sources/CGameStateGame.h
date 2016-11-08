@@ -63,6 +63,8 @@ private:
 
 	int							m_mouseClic;
 
+	CGamePlayer *				m_pCurrentPlayer;
+
 };
 
 #endif // __CGAMESTATEGAME_H

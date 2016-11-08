@@ -61,6 +61,7 @@ enum EPoulpeLook
 
 #include "Inputs.h"
 
+#include "CGamePlayer.h"
 #include "CGamePoulpe.h"
 
 #include "CGameState.h"
