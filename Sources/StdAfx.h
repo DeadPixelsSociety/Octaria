@@ -19,7 +19,7 @@
 //
 // Game data
 
-enum EBlocValue
+enum EBlocType
 {
 	e_bloc_vide,		//<	default
 	e_bloc_herbe,		//<
@@ -50,9 +50,12 @@ enum EPoulpeLook
 };
 
 //
-// Shine SDK includes
+// Shine SDK include
 #include "ShSDK/ShSDK.h"
+#include "Box2D.h"
 
+//
+// Files game includes
 #include "Block.h"
 #include "FieldManager.h"
 #include "ProceduralGeneration.h"
@@ -85,7 +88,6 @@ void OnUserChanged(ShUser * pUser);
 void OnTouchDown(int iTouch, float positionX, float positionY);
 void OnTouchUp(int iTouch, float positionX, float positionY);
 void OnTouchMove(int iTouch, float positionX, float positionY);
-
 
 extern CShArray<ShUser*> g_aUsers;
 extern ShUser * g_pCurrentUser;

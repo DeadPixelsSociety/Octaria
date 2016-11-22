@@ -5,15 +5,19 @@ project(${PROJECT_NAME})
 
 set(SH_ROOT_DIR ${SHSDK_INCLUDE_PATHES} CACHE PATH "Shine root directory")
 
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${SH_ROOT_DIR}/cmake/Modules/")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "C:/ShineResearch/ShineEngine/Shine/cmake/Modules")
 
 include_directories("${SH_ROOT_DIR}/include")
+
+#include_directories(C:/ShineResearch/ShineEngine/Shine/Include/Box2D)
+#add_subdirectory(C:/ShineResearch/ShineEngine/Shine/Include/Box2D Box2D)
 
 find_library(SH_SDK_LIB			"ShSDK"				PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
 find_library(SH_ENTRYPOINT_LIB	"ShEntryPoint"		PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
 find_library(SH_STUB_LIB		"StubUserSystem"	PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
 find_library(SH_CORE_LIB		"ShCore"			PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
+
+find_library(SH_BOX2D_LIB		"Box2D"				PATHS "${SH_ROOT_DIR}" PATH_SUFFIXES Lib lib NO_DEFAULT_PATH)
 
 if (WIN32)
 	find_package(DirectX9 REQUIRED)
@@ -21,9 +25,7 @@ if (WIN32)
 
 	find_package(XAudio REQUIRED)
 	find_package(XInput REQUIRED)
-	
 endif (WIN32)
-
 
 if (MSVC)
 	add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
@@ -82,9 +84,7 @@ source_group("LevelGenerator" FILES ${SOURCES_levelgenerator})
 
 set(SOURCES ${SOURCES_StdAfx} ${SOURCES_main} ${SOURCES_resource} ${SOURCES_gameState} ${SOURCES_stateManager} ${SOURCES_multiResolutionApplication} ${SOURCES_mainMenu} ${SOURCES_input} ${SOURCES_game} ${SOURCES_poulpe}  ${SOURCES_player} ${SOURCES_levelgenerator})
 
-#link_directories("../ShineEngine/Shine/Lib")
-
 add_executable(Octaria WIN32 ${SOURCES_MAIN} ${SOURCES})
 set_property(TARGET Octaria APPEND PROPERTY COMPILE_DEFINITIONS "SH_MASTER=1")
-target_link_libraries(Octaria ${SH_SDK_LIB} ${SH_ENTRYPOINT_LIB} ${SH_STUB_LIB} ${SH_CORE_LIB})
+target_link_libraries(Octaria ${SH_SDK_LIB} ${SH_ENTRYPOINT_LIB} ${SH_STUB_LIB} ${SH_CORE_LIB} ${SH_EXTENSION2D_LIB} ${SH_BOX2D_LIB})
 target_link_libraries(Octaria ${DirectX9_LIBRARIES} ${XInput_LIBRARIES} ${XAudio_LIBRARY})

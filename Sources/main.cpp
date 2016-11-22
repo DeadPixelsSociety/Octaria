@@ -17,9 +17,8 @@ CMultiResolutionApplication	g_multiResolutionApplication;
 float						g_rescaleFactor = 1.0f;
 ShCamera * g_pCamera = shNULL;
 
-//--------------------------------------------------------------------------------------------------
-/// @todo comment
-//--------------------------------------------------------------------------------------------------
+//
+// Users
 CShArray<ShUser *> g_aUsers;
 ShUser * g_pCurrentUser = shNULL;
 Inputs * g_pInputPlayer = shNULL;

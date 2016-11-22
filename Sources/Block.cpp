@@ -17,6 +17,7 @@ Block::Block(void)
 , m_iStartV(0)
 , m_iEndV(0)
 , m_v2Position()
+, m_pBody(shNULL)
 {
 	
 }
@@ -32,57 +33,20 @@ Block::~Block(void)
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void Block::Initialize(ShPrefab * pPrefab, EBlocValue blocType)
+void Block::Initialize(ShPrefab * pPrefab, EBlocType blocType, b2World * pWorld)
 {
 	m_pBlockPref = pPrefab;
 	CShArray<ShObject *> aPrefabElm;
 	ShPrefab::GetChildArray(m_pBlockPref, aPrefabElm);
 
 	int nChildCount = aPrefabElm.GetCount();
-	for (int i = 0; i < nChildCount; ++i)
+	for (int iChild = 0; iChild < nChildCount; ++iChild)
 	{
 		//Si l'element actuel est le sprite 2D, on le recupere
-		if (ShObject::GetType(aPrefabElm[i]) == ShObject::e_type_entity2)
+		if (ShObject::GetType(aPrefabElm[iChild]) == ShObject::e_type_entity2)
 		{
-			m_pBlockEntity = (ShEntity2 *)aPrefabElm[i];
+			m_pBlockEntity = (ShEntity2 *)aPrefabElm[iChild];
 			m_v2Position = ShEntity2::GetWorldPosition2(m_pBlockEntity);
-
-			//Parsing du dataset
-			int dataSetCount = ShObject::GetDataSetCount(m_pBlockEntity);
-
-			for (int j = 0; j < dataSetCount; ++j)
-			{
-				ShDataSet * current_ds = ShObject::GetDataSet(m_pBlockEntity, j);
-				int nb_data = ShDataSet::GetDataCount(current_ds);
-
-				for (int k = 0; k < nb_data; ++k)
-				{
-					ShDataSet::EDataType current_type = ShDataSet::GetDataType(current_ds, k);
-					CShIdentifier c_id;
-
-					switch (current_type)
-					{
-						//Recuperation des valeurs de type int
-						case ShDataSet::e_data_type_int:
-						{
-							c_id = ShDataSet::GetDataIdentifier(current_ds, k);
-
-							//Si valeur representant la borne inferrieur de generation procedurale
-							if (c_id == CShIdentifier("fgenerations"))
-							{
-								ShDataSet::GetDataValue(current_ds, k, m_iStartV);
-							}
-
-							//Si valeur representant la borne supperieur de generation procedurale
-							if (c_id == CShIdentifier("fgeneratione"))
-							{
-								ShDataSet::GetDataValue(current_ds, k, m_iEndV);
-							}
-						}
-						break;
-					}
-				}
-			}
 		}
 	}
 
@@ -95,6 +59,11 @@ void Block::Initialize(ShPrefab * pPrefab, EBlocValue blocType)
 		case e_bloc_charbon: m_blockLife = 12; break;
 		default: m_blockLife = 0;
 	}
+
+	if (e_bloc_vide != m_eBlocType)
+	{
+		CreateBlocBody(pWorld);
+	}
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -104,6 +73,7 @@ void Block::Release(void)
 {
 	m_pBlockPref = shNULL;
 	m_pBlockEntity = shNULL;
+	m_pBody = shNULL;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -153,7 +123,29 @@ ShEntity2 * Block::GetEntity(void)
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-EBlocValue Block::GetType(void)
+EBlocType Block::GetType(void)
 {
 	return(m_eBlocType);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+void Block::CreateBlocBody(b2World * pWorld)
+{
+	b2BodyDef playerDef;
+	playerDef.type = b2_staticBody;
+	playerDef.allowSleep = true;
+
+	playerDef.position.Set(0, 0);
+	m_pBody = pWorld->CreateBody(&playerDef);
+	b2PolygonShape polyShape;
+	polyShape.SetAsBox(64.0f, 64.0f); // FIXME
+
+	b2FixtureDef dynaFixturePlayer;
+	dynaFixturePlayer.shape = &polyShape;
+	dynaFixturePlayer.density = 0.1f; // densité*aire = masse
+	dynaFixturePlayer.friction = 0.3f;
+	dynaFixturePlayer.restitution = 0.3f;
+	m_pBody->CreateFixture(&dynaFixturePlayer);
 }

@@ -23,7 +23,7 @@ public:
 	void				Initialize				(void);
 	void				Release					(void);
 
-	void				AddObjectToIventory		(EBlocValue blocValue);
+	void				AddObjectToIventory		(EBlocType blocValue);
 
 protected:
 
@@ -36,7 +36,7 @@ protected:
 private:
 
 	CShArray<CPoulpe *>		m_aPlayerList;
-	CShArray<EBlocValue>	m_aInventory;
+	CShArray<EBlocType>	m_aInventory;
 		
 };
 

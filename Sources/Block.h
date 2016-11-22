@@ -17,7 +17,7 @@ public:
 	virtual		~Block	(void);
 
 
-	void				Initialize		(ShPrefab * pPrefab, EBlocValue blocType);
+	void				Initialize		(ShPrefab * pPrefab, EBlocType blocType, b2World * pWorld);
 	void				Release			(void);
 
 	bool				HitByPlayer		(void);
@@ -29,7 +29,10 @@ public:
 
 	ShEntity2 *			GetEntity		(void);
 
-	EBlocValue			GetType			(void);
+	EBlocType			GetType			(void);
+
+private:
+	void				CreateBlocBody	(b2World * pWorld);
 
 private:
 
@@ -46,9 +49,11 @@ private:
 	int						m_iStartV;
 	int						m_iEndV;
 
-	EBlocValue				m_eBlocType;
+	EBlocType				m_eBlocType;
 
 	int						m_blockLife;
+
+	b2Body *				m_pBody;
 
 };
 

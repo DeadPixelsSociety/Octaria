@@ -20,15 +20,25 @@ class FieldManager
 {
 public:
 
-	FieldManager	(const CShVector2 & size);
-	~FieldManager	();
+	explicit		FieldManager		(const CShVector2 & size);
+	virtual			~FieldManager		();
 
-	void						GetFieldBlockType		(CShArray<EBlocValue> & aFieldValues);
-	void						GetFieldCoord			(CShArray<CShVector2> & aFieldCoord);
+	void			Initialize			(bool is1D);
+	void			Release				(void);
+		
+	void			GetFieldBlockType	(CShArray<EBlocType> & aFieldType);
+	void			GetFieldCoord		(CShArray<CShVector2> & aFieldCoord);
+
+	void			GenerateMap			(void);
+
+	void			MergeMap			(const CShArray<EBlocType> & aFieldType, CShArray<EBlocType> & aRes);
 
 private:
 
-	void						GenerateMap				(void);	// Genere procéduralement la map 
+	void			GetFieldBlockValue	(CShArray<int> & aFieldType);
+
+	void			GenerateMap1D		(void);
+	void			GenerateMap2D		(void);	
 
 private:
 
@@ -40,6 +50,8 @@ private:
 	int							m_iOctave;			// Parametre "octave" de la generation procédurale
 
 	int							m_magnitude;		// Magnitude à appliquer pour passer de l'intervalle [0-1] à des valeurs utilisables plus simplement
+
+	bool						m_is1D;
 
 };
 

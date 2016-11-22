@@ -47,6 +47,7 @@ public:
 protected:
 
 private:
+	void					GenerateGameMap		(const CShIdentifier & levelIdentifier);
 	void					PlayerMining		(void);
 
 public:
@@ -65,6 +66,7 @@ private:
 
 	CGamePlayer *				m_pCurrentPlayer;
 
+	b2World *					m_pWorld;
 };
 
 #endif // __CGAMESTATEGAME_H

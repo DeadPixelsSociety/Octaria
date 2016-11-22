@@ -8,3 +8,4 @@ mkdir win32_2015
 cd win32_2015
 	cmake -G "Visual Studio 14 2015" -DSHSDK_INCLUDE_PATHES=%SHSDK_INCLUDE_PATHES% %PROJECT_LOCATION%
 cd ..
+pause

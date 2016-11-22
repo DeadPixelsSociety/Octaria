@@ -19,6 +19,7 @@
 , m_pCurrentPoulpe(shNULL)
 , m_mouseClic(0)
 , m_pCurrentPlayer(shNULL)
+, m_pWorld(shNULL)
 {
 
 }
@@ -58,87 +59,17 @@
 	SH_ASSERT(resLoad);
 
 	//
-	// Field generation
-	int nbBlocX = 90;
-	int nbBlocY = 48;
-	int nBlockCount = nbBlocX * nbBlocY;
-	float blocWidth  = 64.0f;	// hardcoded value, getting from sprite
-	float blocHeight = 64.0f;	// ^	
-
-	FieldManager fieldManager(CShVector2(nbBlocX, nbBlocY));
-
-	CShArray<EBlocValue> aFieldBlockType;
-	fieldManager.GetFieldBlockType(aFieldBlockType);
-	SH_ASSERT(nBlockCount == aFieldBlockType.GetCount());
-
-	CShArray<CShVector2> aFieldCoord;
-	fieldManager.GetFieldCoord(aFieldCoord);
-	SH_ASSERT(nBlockCount == aFieldCoord.GetCount());
-
-	// add grass layer
-	for (int x = 0; x < nbBlocX; ++x)
-	{
-		for (int y = nbBlocY - 1; 0 <= y; --y)
-		{
-			if (e_bloc_vide != aFieldBlockType[(x*nbBlocY) + y])
-			{
-				int lastCase = (x*nbBlocY) + y + 1;
-				if (nbBlocY - 1 == y)
-				{
-					--lastCase;
-				}
-
-				aFieldBlockType[lastCase] = e_bloc_herbe;
-
-				break;
-			}
-		}
-	}
+	// Box2D
+	m_pWorld = new b2World(b2Vec2(0.0f, -9.8f));
 
 	//
-	// Get n°0 bloc coord
-	float coordX = 0.0f;
-	float coordY = 0.0f;
-
-	coordX -= ((nbBlocX / 2) * blocWidth);
-	if (0 != (nbBlocX % 2))
-	{
-		coordX -= blocWidth / 2;
-	}
-
-	coordY -= ((nbBlocY / 2) * blocHeight);
-	if (0 != (nbBlocY % 2))
-	{
-		coordY -= blocHeight / 2;
-	}
-
-	//
-	// Generate and place all blocs
-	for (int i = 0; i < nBlockCount; ++i)
-	{
-		if (e_bloc_vide != aFieldBlockType[i])
-		{
-			float currentX, currentY;
-			currentX = coordX + (blocWidth * aFieldCoord[i].m_x);
-			currentY = coordY + (blocHeight * aFieldCoord[i].m_y);
-			ShPrefab * pPrefab = ShPrefab::Create(levelIdentifier, CShIdentifier("ntm"), CShIdentifier(g_aPrefabName[aFieldBlockType[i]]), CShIdentifier("layer_default"), CShVector3(currentX, currentY, 1.0f), CShEulerAngles(), CShVector3(1.0f, 1.0f, 1.0f));
-			SH_ASSERT(shNULL != pPrefab);
-
-			Block * pBlock = new Block();
-			pBlock->Initialize(pPrefab, aFieldBlockType[i]);
-
-			m_aBlockList.Add(pBlock);
-		}
-		else // void bloc
-		{
-			m_aBlockList.Add(shNULL);
-		}
-	}
+	// Procedural map
+	GenerateGameMap(levelIdentifier);
 
 	//
 	// Character
 	CGamePoulpe * pPoulpe = new (CGamePoulpe);
-	pPoulpe->Initialize(levelIdentifier);
+	pPoulpe->Initialize(levelIdentifier, m_pWorld);
 	m_aPoulpeList.Add(pPoulpe);
 
 	m_pCurrentPoulpe = m_aPoulpeList[0];
@@ -176,6 +107,9 @@
 
 	m_pCurrentPlayer->Release();
 	m_pCurrentPlayer = shNULL;
+
+	// TODO delete world
+	m_pWorld = shNULL;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -194,6 +128,16 @@
 
 		case e_state_playing:
 		{
+			//
+			// Update Box2D world
+			
+			// TODO : clamp steps
+			float32 timeStep = 1 / 20.0f;    //the length of time passed to simulate (seconds)
+			int32 velocityIterations = 8;   //how strongly to correct velocity
+			int32 positionIterations = 3;   //how strongly to correct position
+
+			m_pWorld->Step(timeStep, velocityIterations, positionIterations);
+
 			g_pInputPlayer->Update();
 
 			bool isLeft		= g_pInputPlayer->IsLeftPressed();
@@ -217,6 +161,105 @@
 		}
 		break;
 	}
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+void CGameStateGame::GenerateGameMap(const CShIdentifier & levelIdentifier)
+{
+	int nbBlocX = 90;
+	int nbBlocY = 48;
+	int nBlockCount = nbBlocX * nbBlocY;
+	float blocWidth = 64.0f;	// hardcoded value, getting from sprite
+	float blocHeight = 64.0f;	// ^	
+
+	//
+	// Generate 1D field
+	FieldManager fieldManager1D(CShVector2(nbBlocX, nbBlocY));
+	fieldManager1D.Initialize(true);
+	fieldManager1D.GenerateMap();
+
+	CShArray<EBlocType> aFieldBlockType;
+	fieldManager1D.GetFieldBlockType(aFieldBlockType);
+	SH_ASSERT(nBlockCount == aFieldBlockType.GetCount());
+
+	CShArray<CShVector2> aFieldCoord;
+	fieldManager1D.GetFieldCoord(aFieldCoord);
+	SH_ASSERT(nBlockCount == aFieldCoord.GetCount());
+
+	// add grass layer
+	for (int x = 0; x < nbBlocX; ++x)
+	{
+		for (int y = nbBlocY - 1; 0 <= y; --y)
+		{
+			if (e_bloc_vide != aFieldBlockType[(x*nbBlocY) + y])
+			{
+				int lastCase = (x*nbBlocY) + y + 1;
+				if (nbBlocY - 1 == y)
+				{
+					--lastCase;
+				}
+
+				aFieldBlockType[lastCase] = e_bloc_herbe;
+
+				break;
+			}
+		}
+	}
+
+	//
+	// Generate 2D field
+	CShArray<EBlocType> aMergedFieldBlockType;
+	FieldManager fieldManager2D(CShVector2(nbBlocX, nbBlocY));
+	fieldManager2D.Initialize(false);
+	fieldManager2D.GenerateMap();
+
+	fieldManager2D.MergeMap(aFieldBlockType, aMergedFieldBlockType);
+
+	SH_ASSERT(nBlockCount == aMergedFieldBlockType.GetCount());
+
+	//
+	// Get n°0 bloc coord
+	float coordX = 0.0f;
+	float coordY = 0.0f;
+
+	coordX -= ((nbBlocX / 2) * blocWidth);
+	if (0 != (nbBlocX % 2))
+	{
+		coordX -= blocWidth / 2;
+	}
+
+	coordY -= ((nbBlocY / 2) * blocHeight);
+	if (0 != (nbBlocY % 2))
+	{
+		coordY -= blocHeight / 2;
+	}
+
+	//
+	// Generate and place all blocs
+	for (int i = 0; i < nBlockCount; ++i)
+	{
+		if (e_bloc_vide != aMergedFieldBlockType[i])
+		{
+			float currentX, currentY;
+			currentX = coordX + (blocWidth * aFieldCoord[i].m_x);
+			currentY = coordY + (blocHeight * aFieldCoord[i].m_y);
+			ShPrefab * pPrefab = ShPrefab::Create(levelIdentifier, CShIdentifier("ntm"), CShIdentifier(g_aPrefabName[aMergedFieldBlockType[i]]), CShIdentifier("layer_default"), CShVector3(currentX, currentY, 1.0f), CShEulerAngles(), CShVector3(1.0f, 1.0f, 1.0f));
+			SH_ASSERT(shNULL != pPrefab);
+
+			Block * pBlock = new Block();
+			pBlock->Initialize(pPrefab, aMergedFieldBlockType[i], m_pWorld);
+
+			m_aBlockList.Add(pBlock);
+		}
+		else // void bloc
+		{
+			m_aBlockList.Add(shNULL);
+		}
+	}
+
+	fieldManager1D.Release();
 }
 
 //--------------------------------------------------------------------------------------------------

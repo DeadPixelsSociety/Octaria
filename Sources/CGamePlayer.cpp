@@ -49,7 +49,7 @@ void CGamePlayer::Release(void)
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void CGamePlayer::AddObjectToIventory(EBlocValue blocValue)
+void CGamePlayer::AddObjectToIventory(EBlocType blocValue)
 {
 	m_aInventory.Add(blocValue);
 }

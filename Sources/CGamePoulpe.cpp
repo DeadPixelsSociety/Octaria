@@ -16,6 +16,9 @@ extern ShCamera * g_pCamera;
 , m_currentId(0)
 , m_tempoAnim(0)
 , m_direction(0)
+, m_life(100)
+, m_pBody(shNULL)
+, m_pWorld(shNULL)
 {
 }
 
@@ -40,17 +43,27 @@ void CGamePoulpe::Release(void)
 		}
 		m_aPoulpeAnimation[i].Empty();
 	}
+
+	m_pBody = shNULL;
+	m_pWorld = shNULL;
 }
 
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void CGamePoulpe::Initialize(CShIdentifier levelIdentifier)
+void CGamePoulpe::Initialize(CShIdentifier levelIdentifier, b2World * pWorld)
 {
+	m_direction = 0;
+	m_currentId = 0;
+	m_tempoAnim = 0;
+
+	m_pWorld = pWorld;
+
+	//
+	// Sprites
 	char spriteName[256];
 	char spriteIdent[256];
 
-	/* walk without weapon */
 	for (int i = 0; i < 5; i++)
 	{
 		sprintf(spriteName, "sprite_octaria_poulpe_left_%d", i);
@@ -69,6 +82,24 @@ void CGamePoulpe::Initialize(CShIdentifier levelIdentifier)
 		SH_ASSERT(shNULL != pEntity);
 		m_aPoulpeAnimation[1].Add(pEntity);
 	}
+
+	//
+	// Box2D
+	b2BodyDef playerDef;
+	playerDef.type = b2_dynamicBody;
+	playerDef.allowSleep = false;
+	
+	playerDef.position.Set(0, 0);
+	m_pBody = m_pWorld->CreateBody(&playerDef);
+	b2PolygonShape polyShape;
+	polyShape.SetAsBox(60.0f, 60.0f); // FIXME
+	
+	b2FixtureDef dynaFixturePlayer;
+	dynaFixturePlayer.shape = &polyShape;
+	dynaFixturePlayer.density = 0.1f; // densité*aire = masse
+	dynaFixturePlayer.friction = 0.3f;
+	dynaFixturePlayer.restitution = 0.3f;
+	m_pBody->CreateFixture(&dynaFixturePlayer);
 
 	m_eState = e_state_init;
 }
@@ -171,8 +202,23 @@ const EPoulpeLook & CGamePoulpe::GetLook() const
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
+void CGamePoulpe::TakeDamage(int damage)
+{
+	m_life -= damage;
+
+	if (0 >= m_life)
+	{
+		m_eState = e_state_dead;
+	}
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
 void CGamePoulpe::UpdateFromInputs(bool isLeft, bool isRight, bool isDown, bool isUp)
 {
+	//TODO : update box2d body and let sprite follow it
+
 	if (m_tempoAnim >= 4)
 	{
 		m_tempoAnim = 0;
