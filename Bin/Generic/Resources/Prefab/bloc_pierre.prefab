@@ -22,6 +22,31 @@
                     <data type="int" name="fgenerations" value="20"/>
                     <data type="int" name="fgeneratione" value="50"/>
                 </data_set>
+                <data_set name="b2bodydef" instance_name="b2bodydef_0">
+                    <data type="object" sub_type="all" name="attachedobject" value="sprite_octaria_roche_001"/>
+                    <data type="vector2" name="linearvelocity" x="0.000000" y="0.000000"/>
+                    <data type="float" name="angularvelocity" value="0.000000"/>
+                    <data type="float" name="lineardamping" value="0.000000"/>
+                    <data type="float" name="angulardamping" value="0.000000"/>
+                    <data type="bool" name="allowsleep" value="true"/>
+                    <data type="bool" name="awake" value="true"/>
+                    <data type="bool" name="fixedrotation" value="false"/>
+                    <data type="bool" name="bullet" value="false"/>
+                    <data type="bool" name="active" value="true"/>
+                    <data type="float" name="gravityscale" value="1.000000"/>
+                    <data type="enum" name="type" value="static_body"/>
+                </data_set>
+                <data_set name="b2fixturedef" instance_name="b2fixturedef_0">
+                    <data type="enum" name="shapetype" value="polygonShape"/>
+                    <data type="float" name="friction" value="0.200000"/>
+                    <data type="float" name="restitution" value="0.000000"/>
+                    <data type="float" name="density" value="1.000000"/>
+                    <data type="bool" name="issensor" value="false"/>
+                    <data type="int" name="categorybits" value="1"/>
+                    <data type="int" name="maskbits" value="65535"/>
+                    <data type="int" name="groupindex" value="0"/>
+                    <data type="int" name="user_data" value="0"/>
+                </data_set>
             </data_set_list>
         </entity2>
     </object_list>

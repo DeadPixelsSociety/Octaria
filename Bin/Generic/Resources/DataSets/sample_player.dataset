@@ -1,7 +1,0 @@
-<data_set>
-  <data name="life"   type="int"    editable="true" default_value="3"/>
-  <data name="energy" type="float"  editable="true" default_value="100.0f"/>
-  <data name="human"  type="bool"   editable="true" default_value="true"/>
-  <data name="name"   type="string" editable="true" default_value="MyName"/>
-</data_set>
-

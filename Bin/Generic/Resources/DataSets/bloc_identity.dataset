@@ -1,5 +1,0 @@
-<data_set>
-  <data name="ressource"   type="string"    editable="true" default_value="pierre"/>
-  <data name="fgenerations" type="int"       editable="true" default_value="0"/>
-  <data name="fgeneratione" type="int"       editable="true" default_value="50"/>
-</data_set>
