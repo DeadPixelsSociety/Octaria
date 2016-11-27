@@ -7,7 +7,7 @@
 //--------------------------------------------------------------------------------------------------
 
 #include "StdAfx.h"
-extern ShCamera * g_pCamera;
+
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
@@ -19,6 +19,7 @@ extern ShCamera * g_pCamera;
 , m_life(100)
 , m_pBody(shNULL)
 , m_pWorld(shNULL)
+, m_cptJump(0)
 {
 }
 
@@ -51,7 +52,7 @@ void CGamePoulpe::Release(void)
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void CGamePoulpe::Initialize(CShIdentifier levelIdentifier, b2World * pWorld)
+void CGamePoulpe::Initialize(CShIdentifier levelIdentifier, b2World * pWorld, const CShVector2 & pos)
 {
 	m_direction = 0;
 	m_currentId = 0;
@@ -68,7 +69,7 @@ void CGamePoulpe::Initialize(CShIdentifier levelIdentifier, b2World * pWorld)
 	{
 		sprintf(spriteName, "sprite_octaria_poulpe_left_%d", i);
 		sprintf(spriteIdent, "poulpe_left_%d", i);
-		ShEntity2 * pEntity = ShEntity2::Create(levelIdentifier, CShIdentifier(spriteName), CShIdentifier("layer_default"), CShIdentifier("octaria"), CShIdentifier(spriteIdent), CShVector3(0.0f, 0.0f, 4.0f), CShEulerAngles(), CShVector3(0.5f, 0.5f, 1.0f), false);
+		ShEntity2 * pEntity = ShEntity2::Create(levelIdentifier, CShIdentifier(spriteName), CShIdentifier("layer_default"), CShIdentifier("octaria"), CShIdentifier(spriteIdent), CShVector3(pos.m_x, pos.m_y, 4.0f), CShEulerAngles(), CShVector3(0.5f, 0.5f, 1.0f), false);
 		SH_ASSERT(shNULL != pEntity);
 		m_aPoulpeAnimation[0].Add(pEntity);
 	}
@@ -87,16 +88,17 @@ void CGamePoulpe::Initialize(CShIdentifier levelIdentifier, b2World * pWorld)
 	// Box2D
 	b2BodyDef playerDef;
 	playerDef.type = b2_dynamicBody;
-	playerDef.allowSleep = false;
-	
-	playerDef.position.Set(0, 0);
+	playerDef.allowSleep = true;
+	playerDef.fixedRotation = true;
+
+	playerDef.position.Set(pos.m_x, pos.m_y);
 	m_pBody = m_pWorld->CreateBody(&playerDef);
 	b2PolygonShape polyShape;
-	polyShape.SetAsBox(60.0f, 60.0f); // FIXME
+	polyShape.SetAsBox(30.0f, 30.0f);
 	
 	b2FixtureDef dynaFixturePlayer;
 	dynaFixturePlayer.shape = &polyShape;
-	dynaFixturePlayer.density = 0.1f; // densité*aire = masse
+	dynaFixturePlayer.density = 2.0f; // densité*aire = masse
 	dynaFixturePlayer.friction = 0.3f;
 	dynaFixturePlayer.restitution = 0.3f;
 	m_pBody->CreateFixture(&dynaFixturePlayer);
@@ -107,7 +109,7 @@ void CGamePoulpe::Initialize(CShIdentifier levelIdentifier, b2World * pWorld)
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void CGamePoulpe::Update(bool isLeft, bool isRight, bool isDown, bool isUp)
+void CGamePoulpe::Update(bool isLeft, bool isRight, bool isDown, bool isUp, bool isJump)
 {
 	switch (m_eState)
 	{
@@ -116,6 +118,7 @@ void CGamePoulpe::Update(bool isLeft, bool isRight, bool isDown, bool isUp)
 			m_direction = 0;
 			m_currentId = 0;	
 			m_tempoAnim = 0;
+			m_cptJump	= 0;
 			m_eState = e_state_playing;
 		}
 		break;
@@ -129,6 +132,7 @@ void CGamePoulpe::Update(bool isLeft, bool isRight, bool isDown, bool isUp)
 		case e_state_playing:
 		{
 			UpdateFromInputs(isLeft, isRight, isDown, isUp);
+			UpdateFromInputJump(isJump);
 		}
 		break;
 
@@ -147,11 +151,13 @@ void CGamePoulpe::SetLook(float cursorX, float cursorY)
 {
 	CShVector3 currentPos3 = ShEntity2::GetWorldPosition(m_aPoulpeAnimation[m_direction][m_currentId]);
 	CShVector2 currentPos2 = ShCamera::Project(g_pCamera, currentPos3);
+	SH_TRACE("poulpe : %f / %f\n", currentPos3.m_x, currentPos3.m_y);
+	SH_TRACE("cursor : %f / %f\n", cursorX, cursorY);
+
 	float dirDegree = atan2((cursorX + 640) - currentPos2.m_x, (cursorY - 360) - currentPos2.m_y) * 180 / SHC_PI;
 	float dirRad = shDeg2Rad(-dirDegree);
 
 	CShVector3 pos(1.0f, 0.0f, 0.0f);
-
 
 	CShVector3 onsenfout(cursorX - (currentPos2.m_x - 640), cursorY- (currentPos2.m_y - 360), 0.0f);
 
@@ -160,8 +166,8 @@ void CGamePoulpe::SetLook(float cursorX, float cursorY)
 	dirDegree = shRad2Deg(acosf(tg / onsenfout.GetLength()));
 
 	SH_TRACE("degree: %f\n", dirDegree);
-	SH_TRACE("rad: %f\n", dirRad);
-	SH_TRACE("ntm: %f\n", acosf(tg));
+	//SH_TRACE("rad: %f\n", dirRad);
+	//SH_TRACE("ntm: %f\n", acosf(tg));
 
 	if (45 < dirDegree && 135 >= dirDegree)
 	{
@@ -215,20 +221,48 @@ void CGamePoulpe::TakeDamage(int damage)
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
+void CGamePoulpe::UpdateFromInputJump(bool isJump)
+{
+	if (isJump && m_cptJump == 0)
+	{
+		b2Vec2 currentLinearVel = m_pBody->GetLinearVelocity();
+		if (0 < currentLinearVel.y) // only if isn't falling
+		{
+ 			m_cptJump = 50;
+		}
+	}
+
+	if (0 != m_cptJump)
+	{
+		b2Vec2 currentLinearVel = m_pBody->GetLinearVelocity();
+#if 1
+		float force = m_pBody->GetMass() * 1000 / (1 / 60.0); //f = mv/t
+		force /= 6.0;
+		m_pBody->ApplyForce(b2Vec2(currentLinearVel.x, force), m_pBody->GetWorldCenter(), true);
+#else
+		currentLinearVel.y = 1000;
+		m_pBody->SetLinearVelocity(currentLinearVel);
+
+#endif
+		--m_cptJump;
+	}
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
 void CGamePoulpe::UpdateFromInputs(bool isLeft, bool isRight, bool isDown, bool isUp)
 {
-	//TODO : update box2d body and let sprite follow it
-
 	if (m_tempoAnim >= 4)
 	{
 		m_tempoAnim = 0;
 
-		CShVector2 currentPos = ShEntity2::GetWorldPosition2(m_aPoulpeAnimation[m_direction][m_currentId]);
+		b2Vec2 linearDir(0.0f, 0.0f);
 		ShEntity2::SetShow(m_aPoulpeAnimation[m_direction][m_currentId], false);
 
 		if (isLeft)
 		{
-			currentPos.m_x -= 5.0f;
+			linearDir.x -= 10000.0f;
 			if (1 == m_direction) // was right
 			{
 				m_direction = 0;
@@ -241,7 +275,7 @@ void CGamePoulpe::UpdateFromInputs(bool isLeft, bool isRight, bool isDown, bool 
 		}
 		else if (isRight)
 		{
-			currentPos.m_x += 5.0f;
+			linearDir.x += 10000.0f;
 			if (0 == m_direction) // was left
 			{
 				m_direction = 1;
@@ -257,7 +291,11 @@ void CGamePoulpe::UpdateFromInputs(bool isLeft, bool isRight, bool isDown, bool 
 			m_currentId = 0;
 		}
 
-		ShEntity2::SetWorldPosition2(m_aPoulpeAnimation[m_direction][m_currentId], currentPos.m_x, currentPos.m_y);
+		m_pBody->SetLinearVelocity(linearDir);
+
+		const b2Vec2 & bodyPos = m_pBody->GetPosition();
+		ShEntity2::SetWorldPosition2(m_aPoulpeAnimation[m_direction][m_currentId], bodyPos.x, bodyPos.y);
+
 		ShEntity2::SetShow(m_aPoulpeAnimation[m_direction][m_currentId], true);
 	}
 

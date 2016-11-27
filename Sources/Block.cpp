@@ -35,6 +35,8 @@ Block::~Block(void)
 //--------------------------------------------------------------------------------------------------
 void Block::Initialize(ShPrefab * pPrefab, EBlocType blocType, b2World * pWorld)
 {
+	//TODO remove prefab use ? 
+
 	m_pBlockPref = pPrefab;
 	CShArray<ShObject *> aPrefabElm;
 	ShPrefab::GetChildArray(m_pBlockPref, aPrefabElm);
@@ -69,8 +71,10 @@ void Block::Initialize(ShPrefab * pPrefab, EBlocType blocType, b2World * pWorld)
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
-void Block::Release(void)
+void Block::Release(b2World * pWorld)
 {
+	pWorld->DestroyBody(m_pBody);
+
 	m_pBlockPref = shNULL;
 	m_pBlockEntity = shNULL;
 	m_pBody = shNULL;
@@ -137,10 +141,10 @@ void Block::CreateBlocBody(b2World * pWorld)
 	playerDef.type = b2_staticBody;
 	playerDef.allowSleep = true;
 
-	playerDef.position.Set(0, 0);
+	playerDef.position.Set(m_v2Position.m_x, m_v2Position.m_y);
 	m_pBody = pWorld->CreateBody(&playerDef);
 	b2PolygonShape polyShape;
-	polyShape.SetAsBox(64.0f, 64.0f); // FIXME
+	polyShape.SetAsBox(32.0f, 32.0f);
 
 	b2FixtureDef dynaFixturePlayer;
 	dynaFixturePlayer.shape = &polyShape;

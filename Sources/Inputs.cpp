@@ -17,6 +17,7 @@
 , m_bRight(false)
 , m_bUp(false)
 , m_bDown(false)
+, m_bJump(false)
 {
 
 }
@@ -56,6 +57,8 @@ void Inputs::Update(void)
 		m_bRight	= ShUser::HasTriggeredAction(m_pUser, CShIdentifier("right"));
 		m_bUp		= ShUser::HasTriggeredAction(m_pUser, CShIdentifier("up"));
 		m_bDown		= ShUser::HasTriggeredAction(m_pUser, CShIdentifier("down"));
+
+		m_bJump		= ShUser::HasTriggeredAction(m_pUser, CShIdentifier("jump"));
 	}
 }
 
@@ -89,4 +92,9 @@ bool Inputs::IsUpPressed(void)
 bool Inputs::IsDownPressed(void)
 {
 	return m_bDown;
+}
+
+bool Inputs::IsJumpPressed(void)
+{
+	return m_bJump;
 }

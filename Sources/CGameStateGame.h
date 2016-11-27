@@ -50,6 +50,8 @@ private:
 	void					GenerateGameMap		(const CShIdentifier & levelIdentifier);
 	void					PlayerMining		(void);
 
+	void					GetFreePos			(CShVector2 & randPos);
+
 public:
 
 protected:
@@ -59,11 +61,13 @@ private:
 
 	CShArray<Block *>			m_aBlockList;
 
-	CShArray<CGamePoulpe *>		m_aPoulpeList;
+	//CShArray<CGamePoulpe *>	m_aPoulpeList;
 	CGamePoulpe *				m_pCurrentPoulpe;
 
 	int							m_mouseClic;
 
+	CGamePlayer *				m_pPlayer1;
+	CGamePlayer *				m_pPlayer2;
 	CGamePlayer *				m_pCurrentPlayer;
 
 	b2World *					m_pWorld;

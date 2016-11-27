@@ -63,7 +63,7 @@ void ShEntryPoint::OnPostInitialize(void)
 	ShCamera::SetTarget(g_pCamera, CShVector3(0.0f, 0.0f, 0.0f));
 	ShCamera::SetUp(g_pCamera, CShVector3(0.0f, 1.0f, 0.0f));
 	ShCamera::SetNearPlaneDistance(g_pCamera, 1.0f);
-	ShCamera::SetFarPlaneDistance(g_pCamera, 10000.0f);
+	ShCamera::SetFarPlaneDistance(g_pCamera, 4000.0f);
 
 	int displayWidth = ShDisplay::GetWidth(); // 1280
 	int displayHeight = ShDisplay::GetHeight(); // 720

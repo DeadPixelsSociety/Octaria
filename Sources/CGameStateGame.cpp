@@ -8,13 +8,19 @@
 
 #include "StdAfx.h"
 
+#define NB_BLOC_X 90
+#define NB_BLOC_Y 48
+
+#define BLOC_EDGE_LENGTH 64
+
+#define NB_POULPE_PER_TEAM 3
+
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
 /*explicit*/ CGameStateGame::CGameStateGame(void)
 : CGameState()
 , m_eState(e_state_enter)
-, m_aPoulpeList()
 , m_aBlockList()
 , m_pCurrentPoulpe(shNULL)
 , m_mouseClic(0)
@@ -37,7 +43,7 @@
 //--------------------------------------------------------------------------------------------------
 /*virtual*/ void CGameStateGame::Initialize(void)
 {
-
+	srand(time(shNULL));
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -60,24 +66,39 @@
 
 	//
 	// Box2D
-	m_pWorld = new b2World(b2Vec2(0.0f, -9.8f));
+	//b2Vec2 gravity(0.0f, 0.0f);
+	b2Vec2 gravity(0.0f, -1000.0f);
+	m_pWorld = new b2World(gravity);
 
 	//
 	// Procedural map
 	GenerateGameMap(levelIdentifier);
 
 	//
-	// Character
-	CGamePoulpe * pPoulpe = new (CGamePoulpe);
-	pPoulpe->Initialize(levelIdentifier, m_pWorld);
-	m_aPoulpeList.Add(pPoulpe);
-
-	m_pCurrentPoulpe = m_aPoulpeList[0];
+	// Player
+	m_pPlayer1 = new CGamePlayer();
+	m_pCurrentPlayer = m_pPlayer1;
 
 	//
-	// Player
-	CGamePlayer * pPlayer = new CGamePlayer();
-	m_pCurrentPlayer = pPlayer;
+	// Character
+	for (int i = 0; i < NB_POULPE_PER_TEAM; ++i)
+	{
+		CShVector2 randPos;
+		GetFreePos(randPos);
+		CGamePoulpe * pPoulpe = new CGamePoulpe();
+		pPoulpe->Initialize(levelIdentifier, m_pWorld, randPos);
+		m_pPlayer1->AddPoulpeToList(pPoulpe);
+	}
+
+	// TODO poulpe team 2 with other color
+
+	m_pCurrentPoulpe = m_pCurrentPlayer->GetPoulpeToPlay();
+
+	//
+	// Misc
+
+	ShCamera::SetPosition(g_pCamera, CShVector3(m_pCurrentPoulpe->GetPosition(), 2000.0f));
+	ShCamera::SetTarget(g_pCamera, CShVector3(m_pCurrentPoulpe->GetPosition(), 0.0f));
 
 	m_eState = e_state_enter;
 }
@@ -88,28 +109,25 @@
 /*virtual*/ void CGameStateGame::DeActivate(void)
 {
 	m_pCurrentPoulpe = shNULL;
-
-	int nPoulpeCount = m_aPoulpeList.GetCount();
-	for (int iPoulpe = 0; iPoulpe < nPoulpeCount; ++iPoulpe)
-	{
-		m_aPoulpeList[iPoulpe]->Release();
-		SH_SAFE_DELETE(m_aPoulpeList[iPoulpe]);
-	}
-	m_aPoulpeList.Empty();
+	m_pCurrentPlayer = shNULL;
 
 	int nBlockCount = m_aBlockList.GetCount();
-	for (int iBlock = 0; iBlock < nPoulpeCount; ++iBlock)
+	for (int iBlock = 0; iBlock < nBlockCount; ++iBlock)
 	{
-		m_aBlockList[iBlock]->Release();
-		SH_SAFE_DELETE(m_aPoulpeList[iBlock]);
+		if (shNULL != m_aBlockList[iBlock])
+		{
+			m_aBlockList[iBlock]->Release(m_pWorld);
+			SH_SAFE_DELETE(m_aBlockList[iBlock]);
+		}
 	}
 	m_aBlockList.Empty();
 
-	m_pCurrentPlayer->Release();
-	m_pCurrentPlayer = shNULL;
+	m_pPlayer1->Release();
+	m_pPlayer1 = shNULL;
+	m_pPlayer2->Release();
+	m_pPlayer2 = shNULL;
 
-	// TODO delete world
-	m_pWorld = shNULL;
+	SH_SAFE_DELETE(m_pWorld);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -130,13 +148,14 @@
 		{
 			//
 			// Update Box2D world
-			
-			// TODO : clamp steps
-			float32 timeStep = 1 / 20.0f;    //the length of time passed to simulate (seconds)
-			int32 velocityIterations = 8;   //how strongly to correct velocity
-			int32 positionIterations = 3;   //how strongly to correct position
+			{
+				// TODO : clamp steps
+				float32 timeStep = 1 / 20.0f;    //the length of time passed to simulate (seconds)
+				int32 velocityIterations = 8;   //how strongly to correct velocity
+				int32 positionIterations = 3;   //how strongly to correct position
 
-			m_pWorld->Step(timeStep, velocityIterations, positionIterations);
+				m_pWorld->Step(timeStep, velocityIterations, positionIterations);
+			}
 
 			g_pInputPlayer->Update();
 
@@ -144,8 +163,9 @@
 			bool isRight	= g_pInputPlayer->IsRightPressed();
 			bool isDown		= g_pInputPlayer->IsDownPressed();
 			bool isUp		= g_pInputPlayer->IsUpPressed();
+			bool isJump		= g_pInputPlayer->IsJumpPressed();
 
-			m_pCurrentPoulpe->Update(isLeft, isRight, isDown, isUp);
+			m_pCurrentPoulpe->Update(isLeft, isRight, isDown, isUp, isJump);
 			
 			if (m_mouseClic)
 			{
@@ -168,15 +188,11 @@
 //--------------------------------------------------------------------------------------------------
 void CGameStateGame::GenerateGameMap(const CShIdentifier & levelIdentifier)
 {
-	int nbBlocX = 90;
-	int nbBlocY = 48;
-	int nBlockCount = nbBlocX * nbBlocY;
-	float blocWidth = 64.0f;	// hardcoded value, getting from sprite
-	float blocHeight = 64.0f;	// ^	
+	int nBlockCount = NB_BLOC_X * NB_BLOC_Y;
 
 	//
 	// Generate 1D field
-	FieldManager fieldManager1D(CShVector2(nbBlocX, nbBlocY));
+	FieldManager fieldManager1D(CShVector2(NB_BLOC_X, NB_BLOC_Y));
 	fieldManager1D.Initialize(true);
 	fieldManager1D.GenerateMap();
 
@@ -189,14 +205,14 @@ void CGameStateGame::GenerateGameMap(const CShIdentifier & levelIdentifier)
 	SH_ASSERT(nBlockCount == aFieldCoord.GetCount());
 
 	// add grass layer
-	for (int x = 0; x < nbBlocX; ++x)
+	for (int x = 0; x < NB_BLOC_X; ++x)
 	{
-		for (int y = nbBlocY - 1; 0 <= y; --y)
+		for (int y = NB_BLOC_Y - 1; 0 <= y; --y)
 		{
-			if (e_bloc_vide != aFieldBlockType[(x*nbBlocY) + y])
+			if (e_bloc_vide != aFieldBlockType[(x*NB_BLOC_Y) + y])
 			{
-				int lastCase = (x*nbBlocY) + y + 1;
-				if (nbBlocY - 1 == y)
+				int lastCase = (x*NB_BLOC_Y) + y + 1;
+				if (NB_BLOC_Y - 1 == y)
 				{
 					--lastCase;
 				}
@@ -211,7 +227,7 @@ void CGameStateGame::GenerateGameMap(const CShIdentifier & levelIdentifier)
 	//
 	// Generate 2D field
 	CShArray<EBlocType> aMergedFieldBlockType;
-	FieldManager fieldManager2D(CShVector2(nbBlocX, nbBlocY));
+	FieldManager fieldManager2D(CShVector2(NB_BLOC_X, NB_BLOC_Y));
 	fieldManager2D.Initialize(false);
 	fieldManager2D.GenerateMap();
 
@@ -224,16 +240,16 @@ void CGameStateGame::GenerateGameMap(const CShIdentifier & levelIdentifier)
 	float coordX = 0.0f;
 	float coordY = 0.0f;
 
-	coordX -= ((nbBlocX / 2) * blocWidth);
-	if (0 != (nbBlocX % 2))
+	coordX -= ((NB_BLOC_X / 2) * BLOC_EDGE_LENGTH);
+	if (0 != (NB_BLOC_X % 2))
 	{
-		coordX -= blocWidth / 2;
+		coordX -= BLOC_EDGE_LENGTH / 2;
 	}
 
-	coordY -= ((nbBlocY / 2) * blocHeight);
-	if (0 != (nbBlocY % 2))
+	coordY -= ((NB_BLOC_Y / 2) * BLOC_EDGE_LENGTH);
+	if (0 != (NB_BLOC_Y % 2))
 	{
-		coordY -= blocHeight / 2;
+		coordY -= BLOC_EDGE_LENGTH / 2;
 	}
 
 	//
@@ -243,8 +259,8 @@ void CGameStateGame::GenerateGameMap(const CShIdentifier & levelIdentifier)
 		if (e_bloc_vide != aMergedFieldBlockType[i])
 		{
 			float currentX, currentY;
-			currentX = coordX + (blocWidth * aFieldCoord[i].m_x);
-			currentY = coordY + (blocHeight * aFieldCoord[i].m_y);
+			currentX = coordX + (BLOC_EDGE_LENGTH * aFieldCoord[i].m_x);
+			currentY = coordY + (BLOC_EDGE_LENGTH * aFieldCoord[i].m_y);
 			ShPrefab * pPrefab = ShPrefab::Create(levelIdentifier, CShIdentifier("ntm"), CShIdentifier(g_aPrefabName[aMergedFieldBlockType[i]]), CShIdentifier("layer_default"), CShVector3(currentX, currentY, 1.0f), CShEulerAngles(), CShVector3(1.0f, 1.0f, 1.0f));
 			SH_ASSERT(shNULL != pPrefab);
 
@@ -311,12 +327,53 @@ void CGameStateGame::PlayerMining(void)
 					{
 						m_pCurrentPlayer->AddObjectToIventory(pBlock->GetType());
 						ShEntity2::SetShow(m_aBlockList[iBlock]->GetEntity(), false);
-						m_aBlockList[iBlock] = shNULL;
+						m_aBlockList[iBlock]->Release(m_pWorld);
+						m_aBlockList[iBlock] = shNULL; // transform to void
 					}
+					break;
 				}
 			}
 		}
 	}
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+void CGameStateGame::GetFreePos(CShVector2 & randPos)
+{
+	CShArray<int> freePosList;
+	int randRaw;
+
+	while (freePosList.IsEmpty())
+	{
+		randRaw = rand() % NB_BLOC_X;
+		for (int y = 0; y < NB_BLOC_Y - 1; ++y)
+		{
+			int currentBloc = (randRaw*NB_BLOC_Y) + y;
+			if (shNULL != m_aBlockList[currentBloc])
+			{
+				if (e_bloc_herbe == m_aBlockList[currentBloc]->GetType())
+				{
+					freePosList.Add(y);
+				}
+			}
+		}
+	}
+
+	int randId = 0;
+	int nbFreePos = freePosList.GetCount();
+	if (1 < nbFreePos)
+	{
+		randId = rand() % nbFreePos;
+	}
+
+	SH_ASSERT(shNULL != m_aBlockList[(randRaw*NB_BLOC_Y) + freePosList[randId]]);
+
+	const CShVector2 & herbeBlocPos = m_aBlockList[(randRaw*NB_BLOC_Y) + freePosList[randId]]->GetPosition();
+
+	randPos.m_x = herbeBlocPos.m_x;
+	randPos.m_y = herbeBlocPos.m_y + BLOC_EDGE_LENGTH;
 }
 
 //--------------------------------------------------------------------------------------------------

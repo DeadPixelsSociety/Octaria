@@ -26,10 +26,10 @@ public:
 	explicit			CGamePoulpe			(void);
 	virtual				~CGamePoulpe		(void);
 
-	void				Initialize			(CShIdentifier levelIdentifier, b2World * pWorld);
+	void				Initialize			(CShIdentifier levelIdentifier, b2World * pWorld, const CShVector2 & pos);
 	void				Release				(void);
 
-	void				Update				(bool isLeft, bool isRight, bool isDown, bool isUp);
+	void				Update				(bool isLeft, bool isRight, bool isDown, bool isUp, bool isJump);
 
 	void				SetLook				(float cursorX, float cursorY);
 
@@ -44,6 +44,7 @@ protected:
 private:
 
 	void				UpdateFromInputs	(bool isLeft, bool isRight, bool isDown, bool isUp);
+	void				UpdateFromInputJump (bool isJump);
 
 public:
 
@@ -61,6 +62,8 @@ private:
 	int						m_tempoAnim;		
 
 	int						m_life;
+
+	int						m_cptJump;
 
 	b2World *				m_pWorld;
 	b2Body *				m_pBody;

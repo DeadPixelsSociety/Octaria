@@ -18,7 +18,7 @@ public:
 
 
 	void				Initialize		(ShPrefab * pPrefab, EBlocType blocType, b2World * pWorld);
-	void				Release			(void);
+	void				Release			(b2World * pWorld);
 
 	bool				HitByPlayer		(void);
 

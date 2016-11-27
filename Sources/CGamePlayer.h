@@ -9,7 +9,7 @@
 #ifndef __CGAMEPLAYER_H
 #define __CGAMEPLAYER_H
 
-class CPoulpe;
+class CGamePoulpe;
 
 //
 class CGamePlayer
@@ -25,6 +25,10 @@ public:
 
 	void				AddObjectToIventory		(EBlocType blocValue);
 
+	void				AddPoulpeToList			(CGamePoulpe * pPoulpe);
+
+	CGamePoulpe *		GetPoulpeToPlay			(void);
+
 protected:
 
 private:
@@ -35,8 +39,10 @@ protected:
 
 private:
 
-	CShArray<CPoulpe *>		m_aPlayerList;
-	CShArray<EBlocType>	m_aInventory;
+	CShArray<CGamePoulpe *>	m_aPoulpeList;
+	int						m_IdpoulpeToPlay;
+
+	CShArray<EBlocType>		m_aInventory;
 		
 };
 

@@ -13,7 +13,8 @@
 //--------------------------------------------------------------------------------------------------
 /*explicit*/ CGamePlayer::CGamePlayer(void)
 : m_aInventory()
-, m_aPlayerList()
+, m_aPoulpeList()
+, m_IdpoulpeToPlay(0)
 {
 }
 
@@ -36,12 +37,13 @@ void CGamePlayer::Initialize(void)
 //--------------------------------------------------------------------------------------------------
 void CGamePlayer::Release(void)
 {
-	int nPlayerCount = m_aPlayerList.GetCount();
+	int nPlayerCount = m_aPoulpeList.GetCount();
 	for (int i = 0; i < nPlayerCount; ++i)
 	{
-		m_aPlayerList[i] = shNULL;
+		m_aPoulpeList[i]->Release();
+		SH_SAFE_DELETE(m_aPoulpeList[i]);
 	}
-	m_aPlayerList.Empty();
+	m_aPoulpeList.Empty();
 
 	m_aInventory.Empty();
 }
@@ -52,4 +54,20 @@ void CGamePlayer::Release(void)
 void CGamePlayer::AddObjectToIventory(EBlocType blocValue)
 {
 	m_aInventory.Add(blocValue);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+void CGamePlayer::AddPoulpeToList(CGamePoulpe * pPoulpe)
+{
+	m_aPoulpeList.Add(pPoulpe);
+}
+
+//--------------------------------------------------------------------------------------------------
+/// @todo comment
+//--------------------------------------------------------------------------------------------------
+CGamePoulpe * CGamePlayer::GetPoulpeToPlay(void)
+{
+	return(m_aPoulpeList[m_IdpoulpeToPlay]);
 }

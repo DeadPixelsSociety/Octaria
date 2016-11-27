@@ -73,6 +73,7 @@ enum EPoulpeLook
 #include "CGameStateGame.h"
 #include "CGameStateMainMenu.h"
 
+#include "time.h"
 
 //
 // Project callbacks
@@ -95,5 +96,6 @@ extern Inputs * g_pInputPlayer;
 
 void SetCurrentUser(ShUser * pUser);
 
+extern ShCamera * g_pCamera;
 
 #endif // __SHPROJECT_OCTARIA_STDAFX_H

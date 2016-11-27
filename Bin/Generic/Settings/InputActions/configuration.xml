@@ -91,6 +91,29 @@
 		</pad>	
 	</event>
 	
+	<event name="jump">
+		<keyboard>
+			<input name="just_pressed">
+				<parameter name="control" value="space"/>
+				<parameter name="threshold" value="0.5"/>
+			</input>
+		</keyboard>
+		
+		<keyboard>
+			<input name="just_pressed">
+				<parameter name="control" value="0"/>
+				<parameter name="threshold" value="0.5"/>
+			</input>
+		</keyboard>
+		
+		<pad>
+			<input name="just_pressed">
+				<parameter name="control" value="a"/>
+				<parameter name="threshold" value="0.5"/>			
+			</input>
+		</pad>
+	</event>
+	
 	<event name="validate">
 		<keyboard>
 			<input name="just_pressed">

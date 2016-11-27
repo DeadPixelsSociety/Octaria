@@ -24,6 +24,7 @@ public:
 	bool		IsRightPressed		(void);
 	bool		IsUpPressed			(void);
 	bool		IsDownPressed		(void);
+	bool		IsJumpPressed		(void);
 
 private:
 
@@ -33,6 +34,7 @@ private:
 	bool m_bRight;
 	bool m_bUp;
 	bool m_bDown;
+	bool m_bJump;
 };
 
 #endif // __OCTARIA_INPUTS_H

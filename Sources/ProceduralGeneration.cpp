@@ -8,7 +8,6 @@
 
 #include "StdAfx.h"
 
-#include "time.h"
 //--------------------------------------------------------------------------------------------------
 /// @todo comment
 //--------------------------------------------------------------------------------------------------
@@ -35,14 +34,13 @@ void ProceduralGeneration::Initialize(bool is1D /*= false*/)
 
 	m_is1D = is1D;
 
+	//srand(time(shNULL));
 	if (!is1D)
 	{
 		m_maxWitdh = (int)ceil(m_width * pow(2, m_octave - 1) / m_step);
 		int height_max = (int)ceil(m_height * pow(2, m_octave - 1) / m_step);
 
 		m_valeurs = (double*)malloc(sizeof(double) * m_maxWitdh * height_max);
-
-		srand(time(shNULL));
 
 		int nCount = m_maxWitdh * height_max;
 		for (int i = 0; i < nCount; ++i)
@@ -54,7 +52,6 @@ void ProceduralGeneration::Initialize(bool is1D /*= false*/)
 	{
 		m_valeurs = (double*)malloc(sizeof(double) * (int)ceil(m_width * pow(2, m_octave - 1) / m_step));
 
-		srand(time(NULL));
 		int nCount = ceil(m_width * pow(2, m_octave - 1) / m_step);
 		for (int i = 0; i < nCount; i++)
 		{
