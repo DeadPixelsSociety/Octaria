@@ -5,9 +5,6 @@
 				<parameter name="control" value="left"/>
 				<parameter name="threshold" value="0.5"/>
 			</input>
-		</keyboard>
-		
-		<keyboard>
 			<input name="pressed">
 				<parameter name="control" value="q"/>
 				<parameter name="threshold" value="0.5"/>
@@ -28,9 +25,6 @@
 				<parameter name="control" value="right"/>
 				<parameter name="threshold" value="0.5"/>
 			</input>
-		</keyboard>
-		
-		<keyboard>
 			<input name="pressed">
 				<parameter name="control" value="d"/>
 				<parameter name="threshold" value="0.5"/>
@@ -51,9 +45,6 @@
 				<parameter name="control" value="up"/>
 				<parameter name="threshold" value="0.5"/>
 			</input>
-		</keyboard>
-	
-		<keyboard>
 			<input name="pressed">
 				<parameter name="control" value="z"/>
 				<parameter name="threshold" value="0.5"/>
@@ -74,9 +65,6 @@
 				<parameter name="control" value="down"/>
 				<parameter name="threshold" value="0.5"/>
 			</input>
-		</keyboard>
-	
-		<keyboard>
 			<input name="pressed">
 				<parameter name="control" value="s"/>
 				<parameter name="threshold" value="0.5"/>
@@ -97,9 +85,6 @@
 				<parameter name="control" value="space"/>
 				<parameter name="threshold" value="0.5"/>
 			</input>
-		</keyboard>
-		
-		<keyboard>
 			<input name="just_pressed">
 				<parameter name="control" value="0"/>
 				<parameter name="threshold" value="0.5"/>
