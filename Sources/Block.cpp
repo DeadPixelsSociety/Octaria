@@ -137,19 +137,21 @@ EBlocType Block::GetType(void)
 //--------------------------------------------------------------------------------------------------
 void Block::CreateBlocBody(b2World * pWorld)
 {
-	b2BodyDef playerDef;
-	playerDef.type = b2_staticBody;
-	playerDef.allowSleep = true;
+	b2BodyDef blockDef;
+	blockDef.type = b2_staticBody;
+	blockDef.allowSleep = true;
 
-	playerDef.position.Set(m_v2Position.m_x, m_v2Position.m_y);
-	m_pBody = pWorld->CreateBody(&playerDef);
+	b2Vec2 blockPos = ConvertShineToBox2D(m_v2Position);
+	blockDef.position.Set(blockPos.x, blockPos.y);
+	m_pBody = pWorld->CreateBody(&blockDef);
 	b2PolygonShape polyShape;
-	polyShape.SetAsBox(32.0f, 32.0f);
+	b2Vec2 blockSize = ConvertShineToBox2D(CShVector2(31.0f, 31.0f));
+	polyShape.SetAsBox(blockSize.x, blockSize.y);
 
-	b2FixtureDef dynaFixturePlayer;
-	dynaFixturePlayer.shape = &polyShape;
-	dynaFixturePlayer.density = 0.1f; // densité*aire = masse
-	dynaFixturePlayer.friction = 0.3f;
-	dynaFixturePlayer.restitution = 0.3f;
-	m_pBody->CreateFixture(&dynaFixturePlayer);
+	b2FixtureDef dynaFixtureBlock;
+	dynaFixtureBlock.shape = &polyShape;
+	dynaFixtureBlock.density = 5.0f; // densité*aire = masse
+	dynaFixtureBlock.friction = 0.1f;
+	dynaFixtureBlock.restitution = 0.1f;
+	m_pBody->CreateFixture(&dynaFixtureBlock);
 }

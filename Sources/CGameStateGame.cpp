@@ -67,7 +67,7 @@
 	//
 	// Box2D
 	//b2Vec2 gravity(0.0f, 0.0f);
-	b2Vec2 gravity(0.0f, -1000.0f);
+	b2Vec2 gravity(0.0f, -6.9);
 	m_pWorld = new b2World(gravity);
 
 	//
@@ -166,7 +166,10 @@
 			bool isJump		= g_pInputPlayer->IsJumpPressed();
 
 			m_pCurrentPoulpe->Update(isLeft, isRight, isDown, isUp, isJump);
-			
+
+			ShCamera::SetPosition(g_pCamera, CShVector3(m_pCurrentPoulpe->GetPosition(), 2000.0f));
+			ShCamera::SetTarget(g_pCamera, CShVector3(m_pCurrentPoulpe->GetPosition(), 0.0f));
+
 			if (m_mouseClic)
 			{
 				PlayerMining();

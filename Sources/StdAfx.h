@@ -19,6 +19,8 @@
 //
 // Game data
 
+#define BOX2D_RATIO 200
+
 enum EBlocType
 {
 	e_bloc_vide,		//<	default
@@ -95,6 +97,9 @@ extern ShUser * g_pCurrentUser;
 extern Inputs * g_pInputPlayer;
 
 void SetCurrentUser(ShUser * pUser);
+
+CShVector2 ConvertBox2DToShine(b2Vec2 vec);
+b2Vec2 ConvertShineToBox2D(CShVector2 vec);
 
 extern ShCamera * g_pCamera;
 

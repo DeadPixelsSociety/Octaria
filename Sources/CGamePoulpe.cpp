@@ -19,7 +19,6 @@
 , m_life(100)
 , m_pBody(shNULL)
 , m_pWorld(shNULL)
-, m_cptJump(0)
 {
 }
 
@@ -91,16 +90,18 @@ void CGamePoulpe::Initialize(CShIdentifier levelIdentifier, b2World * pWorld, co
 	playerDef.allowSleep = true;
 	playerDef.fixedRotation = true;
 
-	playerDef.position.Set(pos.m_x, pos.m_y);
+	b2Vec2 playerPos = ConvertShineToBox2D((CShVector2)pos);
+	playerDef.position.Set(playerPos.x, playerPos.y);
 	m_pBody = m_pWorld->CreateBody(&playerDef);
 	b2PolygonShape polyShape;
-	polyShape.SetAsBox(30.0f, 30.0f);
+	b2Vec2 boxSize = ConvertShineToBox2D(CShVector2(28.0f, 28.0f));
+	polyShape.SetAsBox(boxSize.x, boxSize.y);
 	
 	b2FixtureDef dynaFixturePlayer;
 	dynaFixturePlayer.shape = &polyShape;
 	dynaFixturePlayer.density = 2.0f; // densité*aire = masse
-	dynaFixturePlayer.friction = 0.3f;
-	dynaFixturePlayer.restitution = 0.3f;
+	dynaFixturePlayer.friction = 0.1f;
+	dynaFixturePlayer.restitution = 0.1f;
 	m_pBody->CreateFixture(&dynaFixturePlayer);
 
 	m_eState = e_state_init;
@@ -118,7 +119,6 @@ void CGamePoulpe::Update(bool isLeft, bool isRight, bool isDown, bool isUp, bool
 			m_direction = 0;
 			m_currentId = 0;	
 			m_tempoAnim = 0;
-			m_cptJump	= 0;
 			m_eState = e_state_playing;
 		}
 		break;
@@ -223,28 +223,15 @@ void CGamePoulpe::TakeDamage(int damage)
 //--------------------------------------------------------------------------------------------------
 void CGamePoulpe::UpdateFromInputJump(bool isJump)
 {
-	if (isJump && m_cptJump == 0)
+	if (isJump)
 	{
 		b2Vec2 currentLinearVel = m_pBody->GetLinearVelocity();
-		if (0 < currentLinearVel.y) // only if isn't falling
+		if (0 <= currentLinearVel.y) // only if isn't falling
 		{
- 			m_cptJump = 50;
+			//TODO - readd remaining Jump Steps and use apply force (jump more smooth) : http://www.iforce2d.net/b2dtut/jumping
+			float impulse = m_pBody->GetMass() * 4;
+			m_pBody->ApplyLinearImpulse(b2Vec2(0, impulse), m_pBody->GetWorldCenter(), true);
 		}
-	}
-
-	if (0 != m_cptJump)
-	{
-		b2Vec2 currentLinearVel = m_pBody->GetLinearVelocity();
-#if 1
-		float force = m_pBody->GetMass() * 1000 / (1 / 60.0); //f = mv/t
-		force /= 6.0;
-		m_pBody->ApplyForce(b2Vec2(currentLinearVel.x, force), m_pBody->GetWorldCenter(), true);
-#else
-		currentLinearVel.y = 1000;
-		m_pBody->SetLinearVelocity(currentLinearVel);
-
-#endif
-		--m_cptJump;
 	}
 }
 
@@ -262,7 +249,7 @@ void CGamePoulpe::UpdateFromInputs(bool isLeft, bool isRight, bool isDown, bool 
 
 		if (isLeft)
 		{
-			linearDir.x -= 10000.0f;
+			linearDir.x -= 0.5f;
 			if (1 == m_direction) // was right
 			{
 				m_direction = 0;
@@ -275,7 +262,7 @@ void CGamePoulpe::UpdateFromInputs(bool isLeft, bool isRight, bool isDown, bool 
 		}
 		else if (isRight)
 		{
-			linearDir.x += 10000.0f;
+			linearDir.x += 0.5f;
 			if (0 == m_direction) // was left
 			{
 				m_direction = 1;
@@ -293,8 +280,8 @@ void CGamePoulpe::UpdateFromInputs(bool isLeft, bool isRight, bool isDown, bool 
 
 		m_pBody->SetLinearVelocity(linearDir);
 
-		const b2Vec2 & bodyPos = m_pBody->GetPosition();
-		ShEntity2::SetWorldPosition2(m_aPoulpeAnimation[m_direction][m_currentId], bodyPos.x, bodyPos.y);
+		b2Vec2 bodyPos = m_pBody->GetPosition();
+		ShEntity2::SetWorldPosition2(m_aPoulpeAnimation[m_direction][m_currentId], ConvertBox2DToShine(bodyPos));
 
 		ShEntity2::SetShow(m_aPoulpeAnimation[m_direction][m_currentId], true);
 	}

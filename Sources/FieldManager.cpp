@@ -132,19 +132,6 @@ void FieldManager::GenerateMap1D(void)
 			if (y < stone) 
 			{
 				m_csMap[x][y].value = 3;
-			
-				//int val;
-				//val = m_pGenerator->Noise(x, y, 1, 14);
-				//if (10 < val) 
-				//{
-				//	m_csMap[x][y].value = 2;
-				//}
-				
-				//val = m_pGenerator->Noise(x, y * 2, 1, 12);
-				//if (10 < val) 
-				//{
-				//	m_csMap[x][y].value = 0;
-				//}
 			}
 			else if (y < dirt) 
 			{

@@ -63,8 +63,6 @@ private:
 
 	int						m_life;
 
-	int						m_cptJump;
-
 	b2World *				m_pWorld;
 	b2Body *				m_pBody;
 };
